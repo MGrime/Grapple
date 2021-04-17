@@ -23,6 +23,11 @@ void APlayerControllerBase::SetupInputComponent()
 	InputComponent->BindAxis(TEXT("Strafe"), this, &APlayerControllerBase::CallStrafe);
 	InputComponent->BindAxis(TEXT("Look Vertical"), this, &APlayerControllerBase::CallLookVertical);
 	InputComponent->BindAxis(TEXT("Look Horizontal"), this, &APlayerControllerBase::CallLookHorizontal);
+
+	InputComponent->BindAction(TEXT("Sprint"), IE_Pressed, this, &APlayerControllerBase::CallSprintPress);
+	InputComponent->BindAction(TEXT("Sprint"), IE_Released, this, &APlayerControllerBase::CallSprintRelease);
+
+	InputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &APlayerControllerBase::CallJump);
 }
 
 void APlayerControllerBase::CallMoveForwards(float Value)
@@ -62,5 +67,21 @@ void APlayerControllerBase::CallJump()
 	if (PlayerChar)
 	{
 		PlayerChar->Jump();
+	}
+}
+
+void APlayerControllerBase::CallSprintPress()
+{
+	if (PlayerChar)
+	{
+		PlayerChar->SprintPress();
+	}
+}
+
+void APlayerControllerBase::CallSprintRelease()
+{
+	if (PlayerChar)
+	{
+		PlayerChar->SprintRelease();
 	}
 }

@@ -24,7 +24,10 @@ protected:
 	void CallStrafe(float Value);
 	void CallLookVertical(float Value);
 	void CallLookHorizontal(float Value);
+	
 	void CallJump();
+	void CallSprintPress();
+	void CallSprintRelease();
 
 private:
 	UPROPERTY()

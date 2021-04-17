@@ -33,6 +33,8 @@ public:
 	void Strafe(float Value);
 	void LookVertical(float Value);
 	void LookHorizontal(float Value);
+	void SprintPress();
+	void SprintRelease();
 
 private:
 
@@ -42,4 +44,21 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Camera")
 		UCameraComponent* Camera;
 
+	UPROPERTY(EditAnywhere)
+		float WalkingSpeed;
+
+	UPROPERTY(EditAnywhere)
+		float SprintSpeed;
+
+	UPROPERTY()
+		bool bSprinting;
+
+	UPROPERTY()
+		float SprintWindupTime = 1.0f;
+
+	UPROPERTY()
+		float CurrentSprintHeldTime = 0.0f;
+
 };
+
+
