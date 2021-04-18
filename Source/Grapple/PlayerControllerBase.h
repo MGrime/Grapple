@@ -22,10 +22,13 @@ protected:
 	// Movement functions
 	void CallMoveForwards(float Value);
 	void CallStrafe(float Value);
+	
 	void CallLookVertical(float Value);
 	void CallLookHorizontal(float Value);
 	
-	void CallJump();
+	void CallJumpPress();
+	void CallJumpRelease();
+
 	void CallSprintPress();
 	void CallSprintRelease();
 

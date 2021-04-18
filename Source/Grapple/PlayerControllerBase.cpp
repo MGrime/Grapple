@@ -27,7 +27,8 @@ void APlayerControllerBase::SetupInputComponent()
 	InputComponent->BindAction(TEXT("Sprint"), IE_Pressed, this, &APlayerControllerBase::CallSprintPress);
 	InputComponent->BindAction(TEXT("Sprint"), IE_Released, this, &APlayerControllerBase::CallSprintRelease);
 
-	InputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &APlayerControllerBase::CallJump);
+	InputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &APlayerControllerBase::CallJumpPress);
+	InputComponent->BindAction(TEXT("Jump"), IE_Released, this, &APlayerControllerBase::CallJumpRelease);
 }
 
 void APlayerControllerBase::CallMoveForwards(float Value)
@@ -62,13 +63,22 @@ void APlayerControllerBase::CallLookHorizontal(float Value)
 	}
 }
 
-void APlayerControllerBase::CallJump()
+void APlayerControllerBase::CallJumpPress()
 {
 	if (PlayerChar)
 	{
-		PlayerChar->Jump();
+		PlayerChar->JumpPress();
 	}
 }
+
+void APlayerControllerBase::CallJumpRelease()
+{
+	if (PlayerChar)
+	{
+		PlayerChar->JumpRelease();
+	}
+}
+
 
 void APlayerControllerBase::CallSprintPress()
 {
