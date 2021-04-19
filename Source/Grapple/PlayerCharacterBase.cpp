@@ -185,6 +185,16 @@ void APlayerCharacterBase::JumpRelease()
 
 #pragma region WALL RUNNING
 
+bool APlayerCharacterBase::IsWallRunning()
+{
+	return bIsWallRunning;
+}
+
+EWallRunSide APlayerCharacterBase::GetWallRunningSide()
+{
+	return WallRunSide;
+}
+
 void APlayerCharacterBase::MovingForward()
 {
 }

@@ -9,8 +9,8 @@
 // Declare enumerations for wall running
 
 // Mark and know which side the wall we are attached to is on
-UENUM()
-enum class EWallRunSide
+UENUM(BlueprintType)
+enum class EWallRunSide : uint8
 {
 	Left = 0 UMETA(DisplayName = "Left"),
 	Right = 1 UMETA(DisplayName = "Right"),
@@ -55,6 +55,14 @@ public:
 	void SprintRelease();
 	void JumpPress();
 	void JumpRelease();
+
+	// Animation
+	UFUNCTION(BlueprintPure, Category = "Wall Running")
+		bool IsWallRunning();
+
+	UFUNCTION(BlueprintPure, Category = "Wall Running")
+		EWallRunSide GetWallRunningSide();
+
 
 private:
 	#pragma region CAMERA
