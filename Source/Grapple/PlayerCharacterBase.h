@@ -183,6 +183,12 @@ private:
 		
 	#pragma endregion
 
+	#pragma region GAME MANAGEMENT
+
+	virtual void FellOutOfWorld(const UDamageType& dmgType) override;
+
+	#pragma endregion
+
 };
 
 

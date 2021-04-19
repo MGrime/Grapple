@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/GameModeBase.h"
 #include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
@@ -526,6 +527,25 @@ void APlayerCharacterBase::CheckWallOnHit(UPrimitiveComponent* HitComponent, AAc
 		}
 	}
 	
+}
+
+void APlayerCharacterBase::FellOutOfWorld(const UDamageType& dmgType)
+{
+	// Kills player
+	Super::FellOutOfWorld(dmgType);
+
+	// Get world ref
+	const auto World = GetWorld();
+
+	if (World)
+	{
+		const auto AuthGameMode = World->GetAuthGameMode();
+
+		if (AuthGameMode)
+		{
+			AuthGameMode->RestartPlayer(World->GetFirstPlayerController());
+		}
+	}
 }
 
 #pragma endregion

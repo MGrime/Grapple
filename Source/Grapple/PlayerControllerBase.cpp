@@ -12,6 +12,15 @@ void APlayerControllerBase::BeginPlay()
 	PlayerChar = Cast<APlayerCharacterBase>(GetPawn());
 }
 
+void APlayerControllerBase::Tick(float DeltaSeconds)
+{
+	// Try to reget player when its invalid
+	if (!IsValid(PlayerChar))
+	{
+		PlayerChar = Cast<APlayerCharacterBase>(GetPawn());
+	}
+}
+
 void APlayerControllerBase::SetupInputComponent()
 {
 	Super::SetupInputComponent();
