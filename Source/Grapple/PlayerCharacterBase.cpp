@@ -374,6 +374,9 @@ void APlayerCharacterBase::Landed(const FHitResult& Hit)
 
 	// When we land reset our jumps
 	ResetJump(MaxJumps);
+
+	// Back to 0 air control
+	GetCharacterMovement()->AirControl = 0.0f;
 }
 
 void APlayerCharacterBase::ResetJump(int ResetToJumps)
@@ -483,8 +486,8 @@ void APlayerCharacterBase::EndWallRun(EWallRunEndReason Reason)
 	// Get movement comp
 	const auto CharacterMovementRef = GetCharacterMovement();
 
-	// Reset air control to 0
-	CharacterMovementRef->AirControl = 0.05f;
+	// Reset air control to 0.3. We want some control after we launch off 
+	CharacterMovementRef->AirControl = 0.3f;
 
 	// Enable gravity
 	CharacterMovementRef->GravityScale = 1.0f;
