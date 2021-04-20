@@ -55,6 +55,7 @@ public:
 	void SprintRelease();
 	void JumpPress();
 	void JumpRelease();
+	void CrouchToggle();
 
 	// Animation
 	UFUNCTION(BlueprintPure, Category = "Wall Running")
@@ -62,6 +63,15 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Wall Running")
 		EWallRunSide GetWallRunningSide();
+
+	UFUNCTION(BlueprintPure, Category = "Crouching")
+		bool IsCrouching();
+
+	UFUNCTION(BlueprintPure, Category = "Landed")
+		bool HasJustLanded();
+
+	UFUNCTION()
+		void NotifyCompletedAnimation(UAnimSequenceBase* CompletedAnimation);
 
 
 private:
@@ -75,13 +85,23 @@ private:
 
 	#pragma endregion 
 
-	#pragma region SPRINT 
+	#pragma region MOVEMENT
+
+	UPROPERTY(EditAnywhere)
+		float CrouchSpeed;
 
 	UPROPERTY(EditAnywhere)
 		float WalkingSpeed;
 
 	UPROPERTY(EditAnywhere)
 		float SprintSpeed;
+
+	UPROPERTY(EditAnywhere)
+		bool bHasJustLanded;
+
+	#pragma endregion
+
+	#pragma region SPRINT
 
 	UPROPERTY()
 		bool bSprinting;
@@ -91,6 +111,20 @@ private:
 
 	UPROPERTY()
 		float CurrentSprintHeldTime = 0.0f;
+	
+	#pragma endregion
+
+	#pragma region CROUCHING
+
+	UPROPERTY(VisibleAnywhere, Category = "Crouching")
+		bool bIsCrouching;
+
+	UPROPERTY(EditAnywhere, Category = "Crouching")
+		float CrouchJumpPowerMultiplier;
+
+	UPROPERTY()
+		float BaseJumpPower;
+	
 	
 	#pragma endregion
 

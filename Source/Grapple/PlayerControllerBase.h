@@ -34,6 +34,8 @@ protected:
 	void CallSprintPress();
 	void CallSprintRelease();
 
+	void CallCrouchToggle();
+
 
 private:
 	UPROPERTY()

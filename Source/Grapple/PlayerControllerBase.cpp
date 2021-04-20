@@ -69,13 +69,18 @@ void APlayerControllerBase::SetupInputComponent()
 
 	InputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &APlayerControllerBase::CallJumpPress);
 	InputComponent->BindAction(TEXT("Jump"), IE_Released, this, &APlayerControllerBase::CallJumpRelease);
+
+	InputComponent->BindAction(TEXT("Crouch"), IE_Pressed, this, &APlayerControllerBase::CallCrouchToggle);
 }
 
 void APlayerControllerBase::CallMoveForwards(float Value)
 {
 	if (PlayerChar)
 	{
-		PlayerChar->MoveForwards(Value);
+		if (!PlayerChar->HasJustLanded())
+		{
+			PlayerChar->MoveForwards(Value);
+		}
 	}
 }
 
@@ -83,7 +88,10 @@ void APlayerControllerBase::CallStrafe(float Value)
 {
 	if (PlayerChar)
 	{
-		PlayerChar->Strafe(Value);
+		if (!PlayerChar->HasJustLanded())
+		{
+			PlayerChar->Strafe(Value);
+		}
 	}
 }
 
@@ -133,5 +141,13 @@ void APlayerControllerBase::CallSprintRelease()
 	if (PlayerChar)
 	{
 		PlayerChar->SprintRelease();
+	}
+}
+
+void APlayerControllerBase::CallCrouchToggle()
+{
+	if (PlayerChar)
+	{
+		PlayerChar->CrouchToggle();
 	}
 }

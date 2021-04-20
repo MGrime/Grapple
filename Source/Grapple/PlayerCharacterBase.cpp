@@ -31,6 +31,8 @@ APlayerCharacterBase::APlayerCharacterBase()
 	// Set defaults
 	// Standard is two jumps
 	MaxJumps = 2;
+
+	bIsCrouching = false;
 }
 
 // Called when the game starts or when spawned
@@ -49,9 +51,10 @@ void APlayerCharacterBase::BeginPlay()
 	IKScale = GetActorTransform().GetScale3D().Z;
 
 	IKTraceDistance = GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() * IKScale;
+
 	
-	
-	
+	BaseJumpPower = CharacterMovementRef->JumpZVelocity;
+	GetCharacterMovement()->MaxWalkSpeed = WalkingSpeed;
 }
 
 // Called every frame
@@ -157,6 +160,12 @@ void APlayerCharacterBase::LookHorizontal(float Value)
 void APlayerCharacterBase::SprintPress()
 {
 	bSprinting = true;
+
+	// Disable crouch if start to sprint
+	if (bIsCrouching)
+	{
+		CrouchToggle();
+	}
 }
 
 void APlayerCharacterBase::SprintRelease()
@@ -181,12 +190,79 @@ void APlayerCharacterBase::JumpPress()
 			// Call end event
 			EndWallRun(EWallRunEndReason::JumpOff);
 		}
+
+		// Or if we have been crouching
+		if (bIsCrouching)
+		{
+			// Disable crouch after the jump
+			CrouchToggle();
+		}
 	}
 }
 
 void APlayerCharacterBase::JumpRelease()
 {
 	StopJumping();
+}
+
+void APlayerCharacterBase::CrouchToggle()
+{
+	// Can't crouch while wall running
+	if (bIsWallRunning)
+	{
+		return;
+	}
+
+	if (bSprinting)
+	{
+		// Coming out a sprint will slide
+		
+	}
+
+	bIsCrouching = !bIsCrouching;
+
+	if (bIsCrouching)
+	{
+		// Reduce max walk speed and slightly increase jump power
+		const auto& CharacterMovementRef = GetCharacterMovement();
+
+		CharacterMovementRef->JumpZVelocity = BaseJumpPower * CrouchJumpPowerMultiplier;
+		CharacterMovementRef->MaxWalkSpeed = CrouchSpeed;
+	}
+	else
+	{
+
+		// Reduce max walk speed and slightly increase jump power
+		const auto& CharacterMovementRef = GetCharacterMovement();
+
+		CharacterMovementRef->JumpZVelocity = BaseJumpPower;
+		CharacterMovementRef->MaxWalkSpeed = WalkingSpeed;
+	}
+	
+	
+	
+}
+
+bool APlayerCharacterBase::IsCrouching()
+{
+	return bIsCrouching;
+}
+
+bool APlayerCharacterBase::HasJustLanded()
+{
+	return bHasJustLanded;
+}
+
+void APlayerCharacterBase::NotifyCompletedAnimation(UAnimSequenceBase* CompletedAnimation)
+{
+	const auto AnimationName = CompletedAnimation->GetName();
+
+	UE_LOG(LogTemp, Warning, TEXT("Animation name: %s"), *AnimationName);
+	
+	if (AnimationName.Equals("Landing"))
+	{
+		bHasJustLanded = false;
+	}
 }
 
 #pragma region WALL RUNNING
@@ -401,6 +477,8 @@ void APlayerCharacterBase::Landed(const FHitResult& Hit)
 
 	// Back to 0 air control
 	GetCharacterMovement()->AirControl = 0.0f;
+
+	bHasJustLanded = true;
 }
 
 void APlayerCharacterBase::ResetJump(int ResetToJumps)
@@ -597,6 +675,4 @@ void APlayerCharacterBase::FellOutOfWorld(const UDamageType& dmgType)
 }
 
 #pragma endregion
-
-
 
