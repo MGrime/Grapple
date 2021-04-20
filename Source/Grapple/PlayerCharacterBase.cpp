@@ -172,7 +172,9 @@ void APlayerCharacterBase::JumpPress()
 		// We have consumed a jump
 
 		// Launch the character
-		LaunchCharacter(FindLaunchVelocity(),false,true);
+		const FVector LaunchVel = FindLaunchVelocity();
+		UE_LOG(LogTemp,Warning,TEXT("%s"),*LaunchVel.ToString())
+		LaunchCharacter(LaunchVel,false,true);
 
 		// Check if we have been wall running
 		if (bIsWallRunning)
@@ -256,9 +258,27 @@ void APlayerCharacterBase::CalculateRunDirectionAndSide(FVector WallNormal)
 
 bool APlayerCharacterBase::CanSurfaceBeWallRan(FVector SurfaceNormal)
 {
-	// Makes sure its not a ceiling or a floor
-	return SurfaceNormal.Z > -0.05
-		&& SurfaceNormal.Z < GetCharacterMovement()->GetWalkableFloorZ();
+	if (SurfaceNormal.Z < -0.05)
+	{
+		return false;
+	}
+
+	FVector WallNormal = FVector(SurfaceNormal.X, SurfaceNormal.Y, 0.0f);
+	WallNormal.Normalize();
+
+	// This is the slope of the wall
+	const auto Slope = FMath::DegreesToRadians(FVector::DotProduct(WallNormal, SurfaceNormal));
+
+	const auto SlopeAngle = FMath::Acos(Slope);
+
+	const float WalkableFloorAngle = GetCharacterMovement()->GetWalkableFloorAngle();
+
+	if (SlopeAngle < WalkableFloorAngle)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 FVector APlayerCharacterBase::FindLaunchVelocity()
@@ -422,6 +442,7 @@ void APlayerCharacterBase::UpdateWallRun()
 		if (!AreRequiredKeysDown())
 		{
 			// Then fall off the wall
+			UE_LOG(LogTemp, Warning, TEXT("Let go of keys!"));
 			EndWallRun(EWallRunEndReason::FallOff);
 			return;
 		}
@@ -435,20 +456,19 @@ void APlayerCharacterBase::UpdateWallRun()
 		switch (WallRunSide)
 		{
 		case EWallRunSide::Left:
-			End += FVector::CrossProduct(WallRunDirection, FVector(0.0f, 0.0f, -1.0f));
+			End += FVector::CrossProduct(WallRunDirection, FVector(0.0f, 0.0f, -200.0f));
 			break;
 		case EWallRunSide::Right:
-			End += FVector::CrossProduct(WallRunDirection, FVector(0.0f, 0.0f, 1.0f));
+			End += FVector::CrossProduct(WallRunDirection, FVector(0.0f, 0.0f, 200.0f));
 			break;
 		}
-		// TODO: Update this to be better. Its a const value to etend
-		End *= 200.0f;
 
 		// Check if we hit something to our side
 		FHitResult OutHit;
 		if (!World->LineTraceSingleByChannel(OutHit,Start,End,ECC_Visibility))
 		{
 			// If we didnt we fell off
+			UE_LOG(LogTemp, Warning, TEXT("The Wall ended!"));
 			EndWallRun(EWallRunEndReason::FallOff);
 			return;
 		}
@@ -464,6 +484,7 @@ void APlayerCharacterBase::UpdateWallRun()
 		// Side has changed so we must have span camera
 		if (CurrentSide != WallRunSide)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Side has switched!"));
 			EndWallRun(EWallRunEndReason::FallOff);
 			return;
 		}
@@ -483,9 +504,11 @@ void APlayerCharacterBase::EndWallRun(EWallRunEndReason Reason)
 	switch (Reason)
 	{
 	case EWallRunEndReason::FallOff:
+		UE_LOG(LogTemp, Warning, TEXT("Fell off the wall!~"));
 		ResetJump(1);
 		break;
 	case EWallRunEndReason::JumpOff:
+		UE_LOG(LogTemp, Warning, TEXT("Jumped off the wall!~"));
 		ResetJump(MaxJumps - 1);
 		break;
 	}
