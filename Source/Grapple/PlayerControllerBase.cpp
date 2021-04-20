@@ -28,6 +28,14 @@ void APlayerControllerBase::BeginPlay()
 					MainMenuWidget->AddToViewport();
 					UE_LOG(LogTemp, Warning, TEXT("Created menu widget!"));
 				}
+				// Set UI input mode
+				SetInputMode(FInputModeUIOnly());
+				SetShowMouseCursor(true);
+			}
+			else
+			{
+				SetInputMode(FInputModeGameOnly());
+				SetShowMouseCursor(false);
 			}
 		}
 		
