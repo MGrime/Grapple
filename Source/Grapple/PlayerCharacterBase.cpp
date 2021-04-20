@@ -173,7 +173,6 @@ void APlayerCharacterBase::JumpPress()
 
 		// Launch the character
 		const FVector LaunchVel = FindLaunchVelocity();
-		UE_LOG(LogTemp,Warning,TEXT("%s"),*LaunchVel.ToString())
 		LaunchCharacter(LaunchVel,false,true);
 
 		// Check if we have been wall running
@@ -183,8 +182,6 @@ void APlayerCharacterBase::JumpPress()
 			EndWallRun(EWallRunEndReason::JumpOff);
 		}
 	}
-
-	return;
 }
 
 void APlayerCharacterBase::JumpRelease()
@@ -442,7 +439,6 @@ void APlayerCharacterBase::UpdateWallRun()
 		if (!AreRequiredKeysDown())
 		{
 			// Then fall off the wall
-			UE_LOG(LogTemp, Warning, TEXT("Let go of keys!"));
 			EndWallRun(EWallRunEndReason::FallOff);
 			return;
 		}
@@ -468,7 +464,6 @@ void APlayerCharacterBase::UpdateWallRun()
 		if (!World->LineTraceSingleByChannel(OutHit,Start,End,ECC_Visibility))
 		{
 			// If we didnt we fell off
-			UE_LOG(LogTemp, Warning, TEXT("The Wall ended!"));
 			EndWallRun(EWallRunEndReason::FallOff);
 			return;
 		}
@@ -484,7 +479,6 @@ void APlayerCharacterBase::UpdateWallRun()
 		// Side has changed so we must have span camera
 		if (CurrentSide != WallRunSide)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Side has switched!"));
 			EndWallRun(EWallRunEndReason::FallOff);
 			return;
 		}
@@ -504,11 +498,9 @@ void APlayerCharacterBase::EndWallRun(EWallRunEndReason Reason)
 	switch (Reason)
 	{
 	case EWallRunEndReason::FallOff:
-		UE_LOG(LogTemp, Warning, TEXT("Fell off the wall!~"));
 		ResetJump(1);
 		break;
 	case EWallRunEndReason::JumpOff:
-		UE_LOG(LogTemp, Warning, TEXT("Jumped off the wall!~"));
 		ResetJump(MaxJumps - 1);
 		break;
 	}
