@@ -34,7 +34,14 @@ protected:
 	void CallSprintPress();
 	void CallSprintRelease();
 
+
 private:
 	UPROPERTY()
 		APlayerCharacterBase* PlayerChar;
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> MainMenuClass;
+
+	UPROPERTY(VisibleAnywhere)
+		UUserWidget* MainMenuWidget;
 };

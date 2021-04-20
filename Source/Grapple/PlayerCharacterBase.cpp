@@ -44,6 +44,12 @@ void APlayerCharacterBase::BeginPlay()
 	// Setup movement constriants to help with wall running calcs later
 	const auto CharacterMovementRef = GetCharacterMovement();
 	CharacterMovementRef->SetPlaneConstraintEnabled(true);
+
+	// Init the IK Variables
+	IKScale = GetActorTransform().GetScale3D().Z;
+
+	IKTraceDistance = GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight() * IKScale;
+	
 	
 	
 }
@@ -527,6 +533,33 @@ void APlayerCharacterBase::CheckWallOnHit(UPrimitiveComponent* HitComponent, AAc
 		}
 	}
 	
+}
+
+float APlayerCharacterBase::IKFootTrace(const FName& Socket)
+{
+	const auto& SocketLocation = GetMesh()->GetSocketLocation(Socket);
+	const auto& PlayerLocation = GetActorLocation();
+
+	const auto Start = FVector(SocketLocation.X, SocketLocation.Y, PlayerLocation.Z);
+	const auto End = FVector(SocketLocation.X, SocketLocation.Y, PlayerLocation.Z + IKTraceDistance);
+
+	const auto& World = GetWorld();
+
+	FHitResult IKHit;
+	if (World->LineTraceSingleByChannel(IKHit,Start,End,ECC_Visibility))
+	{
+		// Calc the IK offset
+		const FVector IKVector = End - IKHit.Location;
+
+		// Deconstruct the length
+		FVector IKDirection;
+		float IKLength;
+		IKVector.ToDirectionAndLength(IKDirection, IKLength);
+
+		return IKLength * IKScale;		
+		
+	}
+	return 0.0f;
 }
 
 void APlayerCharacterBase::FellOutOfWorld(const UDamageType& dmgType)

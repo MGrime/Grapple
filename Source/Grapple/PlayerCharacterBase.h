@@ -183,6 +183,18 @@ private:
 		
 	#pragma endregion
 
+	#pragma region INVERSE KINEMATICS
+
+	// Z-Height of the character
+	float IKScale;
+
+	// Half height of the capsule
+	float IKTraceDistance;
+
+	float IKFootTrace(const FName& Socket);
+
+	#pragma endregion
+	
 	#pragma region GAME MANAGEMENT
 
 	virtual void FellOutOfWorld(const UDamageType& dmgType) override;

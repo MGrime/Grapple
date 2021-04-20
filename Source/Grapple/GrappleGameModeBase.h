@@ -14,4 +14,8 @@ class GRAPPLE_API AGrappleGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintCallable)
+		void LoadLevel(FName LevelName);
+	
 };

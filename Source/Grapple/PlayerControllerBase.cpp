@@ -3,13 +3,36 @@
 
 #include "PlayerControllerBase.h"
 
+#include "GrappleGameInstanceBase.h"
 #include "PlayerCharacterBase.h"
+#include "Blueprint/UserWidget.h"
 
 void APlayerControllerBase::BeginPlay()
 {
 	Super::BeginPlay();
 
 	PlayerChar = Cast<APlayerCharacterBase>(GetPawn());
+
+	if (PlayerChar)
+	{
+		const auto GameInstance = GetGameInstance<UGrappleGameInstanceBase>();
+
+		if (GameInstance)
+		{
+			if (GameInstance->bIsMainMenu)
+			{
+				MainMenuWidget = CreateWidget(this, MainMenuClass);
+
+				if (MainMenuWidget)
+				{
+					MainMenuWidget->AddToViewport();
+					UE_LOG(LogTemp, Warning, TEXT("Created menu widget!"));
+				}
+			}
+		}
+		
+		
+	}
 }
 
 void APlayerControllerBase::Tick(float DeltaSeconds)
