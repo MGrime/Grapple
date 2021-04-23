@@ -36,6 +36,10 @@ protected:
 
 	void CallCrouchToggle();
 
+	// Changes between the main menu and the options
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void ToggleMainMenuLoaded();
+
 
 private:
 	UPROPERTY()
@@ -44,6 +48,12 @@ private:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> MainMenuClass;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> OptionsClass;
+
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* MainMenuWidget;
+
+	UPROPERTY(VisibleAnywhere)
+		UUserWidget* OptionMenuWidget;
 };

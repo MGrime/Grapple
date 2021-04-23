@@ -22,6 +22,7 @@ void APlayerControllerBase::BeginPlay()
 			if (GameInstance->bIsMainMenu)
 			{
 				MainMenuWidget = CreateWidget(this, MainMenuClass);
+				OptionMenuWidget = CreateWidget(this, OptionsClass);
 
 				if (MainMenuWidget)
 				{
@@ -149,5 +150,22 @@ void APlayerControllerBase::CallCrouchToggle()
 	if (PlayerChar)
 	{
 		PlayerChar->CrouchToggle();
+	}
+}
+
+void APlayerControllerBase::ToggleMainMenuLoaded()
+{
+	if (MainMenuWidget && OptionMenuWidget)
+	{
+		if (MainMenuWidget->IsInViewport())
+		{
+			MainMenuWidget->RemoveFromViewport();
+			OptionMenuWidget->AddToViewport();
+		}
+		else
+		{
+			OptionMenuWidget->RemoveFromViewport();
+			MainMenuWidget->AddToViewport();
+		}
 	}
 }
