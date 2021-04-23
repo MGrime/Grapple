@@ -73,6 +73,12 @@ public:
 	UFUNCTION()
 		void NotifyCompletedAnimation(UAnimSequenceBase* CompletedAnimation);
 
+	// IK Getters
+	UFUNCTION(BlueprintCallable, Category = "IK")
+		float GetRightFootIK();
+	
+	UFUNCTION(BlueprintCallable, Category = "IK")
+		float GetLeftFootIK();
 
 private:
 	#pragma region CAMERA
@@ -220,12 +226,35 @@ private:
 	#pragma region INVERSE KINEMATICS
 
 	// Z-Height of the character
-	float IKScale;
+	UPROPERTY()
+		float IKScale;
 
 	// Half height of the capsule
-	float IKTraceDistance;
+	UPROPERTY()
+		float IKTraceDistance;
 
-	float IKFootTrace(const FName& Socket);
+	// Set in blueprint
+	UPROPERTY(EditAnywhere, Category="IK")
+		FName IKRightFootSocket;
+
+	UPROPERTY(EditAnywhere, Category = "IK")
+		FName IKLeftFootSocket;
+
+	UPROPERTY(EditAnywhere, Category = "IK")
+		float IKInteropSpeed;
+
+	// Updated per frame
+	UPROPERTY()
+		float IKRightFoot;
+	UPROPERTY()
+		float IKLeftFoot;
+
+	UFUNCTION()
+		void UpdateIKVariables(float DeltaTime);
+	
+	// Used by main update function
+	UFUNCTION()
+		float IKFootTrace(const FName& Socket);
 
 	#pragma endregion
 	

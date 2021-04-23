@@ -121,7 +121,10 @@ void APlayerCharacterBase::Tick(float DeltaTime)
 		UpdateWallRun();
 	}
 	
-	#pragma endregion 
+	#pragma endregion
+
+	// Update inverse kinematics
+	UpdateIKVariables(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -653,6 +656,28 @@ float APlayerCharacterBase::IKFootTrace(const FName& Socket)
 		
 	}
 	return 0.0f;
+}
+
+void APlayerCharacterBase::UpdateIKVariables(float DeltaTime)
+{
+	// Update the right foot
+	IKRightFoot = FMath::FInterpTo(IKRightFoot, IKFootTrace(IKRightFootSocket), DeltaTime, IKInteropSpeed);
+
+	//update the left foot
+	IKLeftFoot = FMath::FInterpTo(IKLeftFoot, IKFootTrace(IKLeftFootSocket), DeltaTime, IKInteropSpeed);
+
+	UE_LOG(LogTemp, Warning, TEXT("Updated IK Vars: %f %f"), IKRightFoot, IKLeftFoot);
+}
+
+
+float APlayerCharacterBase::GetRightFootIK()
+{
+	return IKRightFoot;
+}
+
+float APlayerCharacterBase::GetLeftFootIK()
+{
+	return IKLeftFoot;
 }
 
 void APlayerCharacterBase::FellOutOfWorld(const UDamageType& dmgType)
