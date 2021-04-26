@@ -6,9 +6,11 @@
 #include "GrappleGameInstanceBase.h"
 #include "GrappleGameModeBase.h"
 #include "GrappleGameStateBase.h"
+#include "LevelDetailsActor.h"
 #include "PlayerCharacterBase.h"
 #include "PlayerControllerBase.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ALevelTransferVolumeBase::ALevelTransferVolumeBase()
@@ -49,6 +51,7 @@ void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, 
 				// get the instance and state
 				const auto GameInstance = World->GetGameInstance<UGrappleGameInstanceBase>();
 				const auto GameState = World->GetGameState<AGrappleGameStateBase>();
+				const auto LevelDetails = Cast<ALevelDetailsActor>(UGameplayStatics::GetActorOfClass(World, ALevelDetailsActor::StaticClass()));
 				// Add to the save game
 				// Check if the level times already exists
 				if (GameInstance->ActiveSaveGame->LevelTimes.Contains(LevelPlacedIndex))
@@ -67,13 +70,15 @@ void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, 
 				// Check for tokens count
 				if (GameInstance->ActiveSaveGame->LevelTokens.Contains(LevelPlacedIndex))
 				{
-					// TODO: PLACE HOLDER. NO TOKEN COUNT YET
-					GameInstance->ActiveSaveGame->LevelTokens[LevelPlacedIndex] = FLevelTokenData{ 0,0 };
+					if (GameInstance->ActiveSaveGame->LevelTokens[LevelPlacedIndex].TokensCollected < GameState->LevelTokens)
+					{
+						GameInstance->ActiveSaveGame->LevelTokens[LevelPlacedIndex] = FLevelTokenData{ GameState->LevelTokens,LevelDetails->TotalTokenCount };
+					}
 				}
 				else
 				{
 					// First time so this is the most we have got
-					GameInstance->ActiveSaveGame->LevelTokens.Add(LevelPlacedIndex, FLevelTokenData{ 0,0 });
+					GameInstance->ActiveSaveGame->LevelTokens.Add(LevelPlacedIndex, FLevelTokenData{ GameState->LevelTokens,LevelDetails->TotalTokenCount });
 				}
 				
 				// Save the game

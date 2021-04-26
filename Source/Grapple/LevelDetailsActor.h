@@ -14,6 +14,8 @@ UCLASS()
 class GRAPPLE_API ALevelDetailsActor : public AActor
 {
 	GENERATED_BODY()
+protected:
+	virtual void BeginPlay() override;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -25,4 +27,9 @@ public:
 	// This is the longest time for gold. Silver adds 1/3, bronze adds another 1/3
 	UPROPERTY(EditAnywhere)
 		float TimeForGold;
+
+	// This is read and filled automatically using a special method
+	UPROPERTY(BlueprintReadOnly)
+		int32 TotalTokenCount;
+	
 };
