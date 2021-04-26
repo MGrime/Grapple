@@ -9,51 +9,29 @@
 
 #include "GrappleGameModeBase.generated.h"
 
+class ALevelDetailsActor;
 /**
- * 
+ * This is created every single level load
  */
 UCLASS()
 class GRAPPLE_API AGrappleGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+private:
+	virtual void BeginPlay() override;
 public:
-	UFUNCTION()
-		virtual void BeginPlay() override;
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Exec)
 		void LoadLevel(FName LevelName);
 
 	UFUNCTION(BlueprintCallable)
-		void SaveSettings();
-	
-	#pragma region VARIABLE ACCESS
+		FString GetActiveLevelName();
 
 	UFUNCTION(BlueprintCallable)
-		USettingsSaveGame* GetSaveGame();
-
-	#pragma endregion
-
-	#pragma region ASYNC CALLBACKS
-
-	UFUNCTION()
-		void SettingsSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess);
-	
-	#pragma endregion
-		
+		float GetActiveLevelGoldTime();
 
 private:
+	UPROPERTY(VisibleAnywhere)
+		ALevelDetailsActor* ActiveLevelDetails;
 
-	#pragma region SOUND
-	
-	#pragma endregion
-	
-	#pragma region SAVE GAMES
-	
-	UPROPERTY(VisibleAnywhere, Category = "Save Game")
-	USettingsSaveGame* SettingsSaveGame;	
-
-	#pragma endregion
-	
-	
 };

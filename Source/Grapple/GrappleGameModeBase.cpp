@@ -5,19 +5,31 @@
 
 #include "PlayerControllerBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "LevelDetailsActor.h"
 
 void AGrappleGameModeBase::BeginPlay()
 {
-	Super::BeginPlay();
+	// Search for level detials actor
+	ActiveLevelDetails = Cast<ALevelDetailsActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ALevelDetailsActor::StaticClass()));
+	
+}
 
-	// Try to load settings
-	SettingsSaveGame = Cast<USettingsSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("SettingsSaveGame"), 0));
-	if (!SettingsSaveGame)
+FString AGrappleGameModeBase::GetActiveLevelName()
+{
+	if (ActiveLevelDetails)
 	{
-		// Nothhing loaded so create blank
-		SettingsSaveGame = Cast<USettingsSaveGame>(UGameplayStatics::CreateSaveGameObject(USettingsSaveGame::StaticClass()));
+		return ActiveLevelDetails->LevelName;
 	}
+	return TEXT("");
+}
 
+float AGrappleGameModeBase::GetActiveLevelGoldTime()
+{
+	if (ActiveLevelDetails)
+	{
+		return ActiveLevelDetails->TimeForGold;
+	}
+	return 0.0f;
 }
 
 void AGrappleGameModeBase::LoadLevel(FName LevelName)
@@ -29,31 +41,4 @@ void AGrappleGameModeBase::LoadLevel(FName LevelName)
 		UGameplayStatics::OpenLevel(World, LevelName, TRAVEL_Absolute);
 	}
 
-}
-
-void AGrappleGameModeBase::SaveSettings()
-{
-	// Bind callback
-	FAsyncSaveGameToSlotDelegate SavedDelegate;
-	SavedDelegate.BindUObject(this, &AGrappleGameModeBase::SettingsSaveComplete);
-
-	// Async save
-	UGameplayStatics::AsyncSaveGameToSlot(SettingsSaveGame, SettingsSaveGame->SaveSlotName, SettingsSaveGame->UserIndex, SavedDelegate);
-}
-
-USettingsSaveGame* AGrappleGameModeBase::GetSaveGame()
-{
-	return SettingsSaveGame;
-}
-
-void AGrappleGameModeBase::SettingsSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess)
-{
-	if (bSuccess)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Settings saved to slot %s index %i"), *SlotName, UserIndex);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Settings failed to save!"));
-	}
 }

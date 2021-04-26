@@ -3,3 +3,8 @@
 
 #include "GlobalSaveGameBase.h"
 
+UGlobalSaveGameBase::UGlobalSaveGameBase()
+{
+	SaveSlotName = TEXT("SaveSlotOne");
+	UserIndex = 0;
+}

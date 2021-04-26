@@ -665,8 +665,6 @@ void APlayerCharacterBase::UpdateIKVariables(float DeltaTime)
 
 	//update the left foot
 	IKLeftFoot = FMath::FInterpTo(IKLeftFoot, IKFootTrace(IKLeftFootSocket), DeltaTime, IKInteropSpeed);
-
-	UE_LOG(LogTemp, Warning, TEXT("Updated IK Vars: %f %f"), IKRightFoot, IKLeftFoot);
 }
 
 

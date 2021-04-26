@@ -38,9 +38,9 @@ void APlayerControllerBase::BeginPlay()
 				SetInputMode(FInputModeGameOnly());
 				SetShowMouseCursor(false);
 			}
-		}
-		
-		
+
+			bIsIgnoringInput = false;
+		}		
 	}
 }
 
@@ -76,7 +76,7 @@ void APlayerControllerBase::SetupInputComponent()
 
 void APlayerControllerBase::CallMoveForwards(float Value)
 {
-	if (PlayerChar)
+	if (PlayerChar && !bIsIgnoringInput)
 	{
 		if (!PlayerChar->HasJustLanded())
 		{
@@ -87,7 +87,7 @@ void APlayerControllerBase::CallMoveForwards(float Value)
 
 void APlayerControllerBase::CallStrafe(float Value)
 {
-	if (PlayerChar)
+	if (PlayerChar && !bIsIgnoringInput)
 	{
 		if (!PlayerChar->HasJustLanded())
 		{
@@ -98,7 +98,7 @@ void APlayerControllerBase::CallStrafe(float Value)
 
 void APlayerControllerBase::CallLookVertical(float Value)
 {
-	if (PlayerChar)
+	if (PlayerChar && !bIsIgnoringInput)
 	{
 		PlayerChar->LookVertical(Value);
 	}
@@ -106,7 +106,7 @@ void APlayerControllerBase::CallLookVertical(float Value)
 
 void APlayerControllerBase::CallLookHorizontal(float Value)
 {
-	if (PlayerChar)
+	if (PlayerChar && !bIsIgnoringInput)
 	{
 		PlayerChar->LookHorizontal(Value);
 	}
@@ -114,7 +114,7 @@ void APlayerControllerBase::CallLookHorizontal(float Value)
 
 void APlayerControllerBase::CallJumpPress()
 {
-	if (PlayerChar)
+	if (PlayerChar && !bIsIgnoringInput)
 	{
 		PlayerChar->JumpPress();
 	}
@@ -122,7 +122,7 @@ void APlayerControllerBase::CallJumpPress()
 
 void APlayerControllerBase::CallJumpRelease()
 {
-	if (PlayerChar)
+	if (PlayerChar && !bIsIgnoringInput)
 	{
 		PlayerChar->JumpRelease();
 	}
@@ -131,7 +131,7 @@ void APlayerControllerBase::CallJumpRelease()
 
 void APlayerControllerBase::CallSprintPress()
 {
-	if (PlayerChar)
+	if (PlayerChar && !bIsIgnoringInput)
 	{
 		PlayerChar->SprintPress();
 	}
@@ -139,7 +139,7 @@ void APlayerControllerBase::CallSprintPress()
 
 void APlayerControllerBase::CallSprintRelease()
 {
-	if (PlayerChar)
+	if (PlayerChar && !bIsIgnoringInput)
 	{
 		PlayerChar->SprintRelease();
 	}
@@ -147,7 +147,7 @@ void APlayerControllerBase::CallSprintRelease()
 
 void APlayerControllerBase::CallCrouchToggle()
 {
-	if (PlayerChar)
+	if (PlayerChar && !bIsIgnoringInput)
 	{
 		PlayerChar->CrouchToggle();
 	}
@@ -167,5 +167,20 @@ void APlayerControllerBase::ToggleMainMenuLoaded()
 			OptionMenuWidget->RemoveFromViewport();
 			MainMenuWidget->AddToViewport();
 		}
+	}
+}
+
+void APlayerControllerBase::LoadLevelCompleteUI()
+{
+	const auto LevelCompleteUI = CreateWidget(this, LevelCompleteClass);
+
+	if (LevelCompleteUI)
+	{	
+		LevelCompleteUI->AddToViewport();
+		// Set UI input mode
+		SetInputMode(FInputModeUIOnly());
+		SetShowMouseCursor(true);
+
+		bIsIgnoringInput = true;
 	}
 }

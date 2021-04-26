@@ -3,8 +3,11 @@
 
 #include "LevelTransferVolumeBase.h"
 
+#include "GrappleGameInstanceBase.h"
 #include "GrappleGameModeBase.h"
+#include "GrappleGameStateBase.h"
 #include "PlayerCharacterBase.h"
+#include "PlayerControllerBase.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -19,6 +22,11 @@ ALevelTransferVolumeBase::ALevelTransferVolumeBase()
 	// Hook dynamic event to change level
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ALevelTransferVolumeBase::TriggerInteraction);
 
+}
+
+FName ALevelTransferVolumeBase::GetLevelTransferName()
+{
+	return LevelTransferName;
 }
 
 void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -38,7 +46,44 @@ void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, 
 
 			if (GameMode)
 			{
-				GameMode->LoadLevel(LevelName);
+				// get the instance and state
+				const auto GameInstance = World->GetGameInstance<UGrappleGameInstanceBase>();
+				const auto GameState = World->GetGameState<AGrappleGameStateBase>();
+				// Add to the save game
+				// Check if the level times already exists
+				if (GameInstance->ActiveSaveGame->LevelTimes.Contains(LevelPlacedIndex))
+				{
+					// Only update if time is better
+					if (GameInstance->ActiveSaveGame->LevelTimes[LevelPlacedIndex].Time > GameState->LevelTimer)
+					{
+						GameInstance->ActiveSaveGame->LevelTimes[LevelPlacedIndex].Time = GameState->LevelTimer;
+					}
+				}
+				else
+				{
+					// First time so this is our best time
+					GameInstance->ActiveSaveGame->LevelTimes.Add(LevelPlacedIndex, FLevelTimeData{ GameState->LevelTimer });
+				}
+				// Check for tokens count
+				if (GameInstance->ActiveSaveGame->LevelTokens.Contains(LevelPlacedIndex))
+				{
+					// TODO: PLACE HOLDER. NO TOKEN COUNT YET
+					GameInstance->ActiveSaveGame->LevelTokens[LevelPlacedIndex] = FLevelTokenData{ 0,0 };
+				}
+				else
+				{
+					// First time so this is the most we have got
+					GameInstance->ActiveSaveGame->LevelTokens.Add(LevelPlacedIndex, FLevelTokenData{ 0,0 });
+				}
+				
+				// Save the game
+				GameInstance->SaveActive();
+
+				// Disable game counter
+				GameState->bIsLevelDone = true;
+
+				// Call toggle ui on player
+				Player->GetController<APlayerControllerBase>()->LoadLevelCompleteUI();
 			}
 		}
 	}

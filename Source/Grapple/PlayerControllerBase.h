@@ -14,6 +14,10 @@ UCLASS()
 class GRAPPLE_API APlayerControllerBase : public APlayerController
 {
 	GENERATED_BODY()
+public:
+	// Called when level is ended
+	UFUNCTION(BlueprintCallable, Category = "UI")
+		void LoadLevelCompleteUI();
 protected:
 	virtual void BeginPlay() override;
 
@@ -51,9 +55,16 @@ private:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> OptionsClass;
 
+	// Has no accompying pointer as it gets made and set to viewport, then immedately destoryed when new level loaded.
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> LevelCompleteClass;
+
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* MainMenuWidget;
 
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* OptionMenuWidget;
+
+	UPROPERTY()
+		bool bIsIgnoringInput;
 };

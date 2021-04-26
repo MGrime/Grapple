@@ -5,7 +5,7 @@
 
 USettingsSaveGame::USettingsSaveGame()
 {
-	SaveSlotName = TEXT("SettingsSaveGame");
+	SaveSlotName = TEXT("SettingsSlot");
 
 	UserIndex = 0;
 	
