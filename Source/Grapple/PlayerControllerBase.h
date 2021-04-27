@@ -55,6 +55,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> OptionsClass;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> LevelSelectClass;
+
 	// Has no accompying pointer as it gets made and set to viewport, then immedately destoryed when new level loaded.
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> LevelCompleteClass;
@@ -64,6 +67,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* OptionMenuWidget;
+
+	UPROPERTY(VisibleAnywhere)
+		UUserWidget* LevelSelectWidget;
 
 	UPROPERTY()
 		bool bIsIgnoringInput;

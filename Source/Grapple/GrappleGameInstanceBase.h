@@ -24,10 +24,13 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		bool bIsMainMenu = true;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintReadWrite)
+		bool bIsLevelSelect = false;
+
+	UPROPERTY(BlueprintReadWrite)
 		UGlobalSaveGameBase* ActiveSaveGame = nullptr;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintReadWrite)
 		USettingsSaveGame* SettingsSaveGame = nullptr;
 
 	#pragma endregion

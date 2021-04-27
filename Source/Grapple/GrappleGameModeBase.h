@@ -21,8 +21,12 @@ private:
 	virtual void BeginPlay() override;
 public:
 	
-	UFUNCTION(BlueprintCallable, Exec)
+	UFUNCTION(BlueprintCallable)
 		void LoadLevel(FName LevelName);
+
+	// Loads level clearing any instance UI state
+	UFUNCTION(Exec)
+		void LoadLevelCon(FName LevelName);
 
 	UFUNCTION(BlueprintCallable)
 		FString GetActiveLevelName();

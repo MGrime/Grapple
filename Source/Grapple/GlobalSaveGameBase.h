@@ -45,5 +45,27 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Levels")
 		TMap<int32,FLevelTokenData> LevelTokens;
+
+
+	// Blueprints don't inherently support the Maps above. So we combat this by exposing the needed detials through functions
+	
+	#pragma region BLUEPRINT FUNCTIONS
+
+	UFUNCTION(BlueprintPure, Category = "Blueprint")
+		bool HasLevelEntry(int32 levelIndex);
+
+	// Returns best time for that level
+	UFUNCTION(BlueprintPure, Category = "Blueprint")
+		float GetLevelTime(int32 levelIndex);
+
+	// Returns best tokens collected for that level
+	UFUNCTION(BlueprintPure, Category = "Blueprint")
+		int32 GetLevelTokensCollected(int32 levelIndex);
+
+	// Returns max tokens for that level
+	UFUNCTION(BlueprintPure, Category = "Blueprint")
+		int32 GetLevelTokensMax(int32 levelIndex);
+	
+	#pragma endregion 
 	
 };

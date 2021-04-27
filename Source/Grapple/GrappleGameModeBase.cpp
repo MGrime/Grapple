@@ -3,6 +3,7 @@
 
 #include "GrappleGameModeBase.h"
 
+#include "GrappleGameInstanceBase.h"
 #include "PlayerControllerBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "LevelDetailsActor.h"
@@ -41,4 +42,16 @@ void AGrappleGameModeBase::LoadLevel(FName LevelName)
 		UGameplayStatics::OpenLevel(World, LevelName, TRAVEL_Absolute);
 	}
 
+}
+
+void AGrappleGameModeBase::LoadLevelCon(FName LevelName)
+{
+	const auto GameInstance = GetGameInstance<UGrappleGameInstanceBase>();
+	if (GameInstance)
+	{
+		GameInstance->bIsMainMenu = false;
+		GameInstance->bIsLevelSelect = false;
+	}
+	
+	LoadLevel(LevelName);
 }

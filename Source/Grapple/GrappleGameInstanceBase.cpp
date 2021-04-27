@@ -46,7 +46,7 @@ void UGrappleGameInstanceBase::SaveActive()
 	SavedDelegate.BindUObject(this, &UGrappleGameInstanceBase::ActiveSaveComplete);
 
 	// Async save
-	UGameplayStatics::AsyncSaveGameToSlot(ActiveSaveGame, ActiveSaveGame->SaveSlotName, SettingsSaveGame->UserIndex, SavedDelegate);
+	UGameplayStatics::AsyncSaveGameToSlot(ActiveSaveGame, ActiveSaveGame->SaveSlotName, ActiveSaveGame->UserIndex, SavedDelegate);
 }
 
 void UGrappleGameInstanceBase::ActiveSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess)

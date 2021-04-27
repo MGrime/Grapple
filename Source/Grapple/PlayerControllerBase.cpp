@@ -29,6 +29,21 @@ void APlayerControllerBase::BeginPlay()
 					MainMenuWidget->AddToViewport();
 					UE_LOG(LogTemp, Warning, TEXT("Created menu widget!"));
 				}
+			}
+			else if (GameInstance->bIsLevelSelect)
+			{
+				LevelSelectWidget = CreateWidget(this, LevelSelectClass);
+
+				if (LevelSelectWidget)
+				{
+					LevelSelectWidget->AddToViewport();
+					UE_LOG(LogTemp, Warning, TEXT("Created level select widget!"));
+				}
+				
+			}
+
+			if (GameInstance->bIsMainMenu || GameInstance->bIsLevelSelect)
+			{
 				// Set UI input mode
 				SetInputMode(FInputModeUIOnly());
 				SetShowMouseCursor(true);
