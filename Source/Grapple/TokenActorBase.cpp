@@ -5,7 +5,7 @@
 
 #include "GrappleGameStateBase.h"
 #include "PlayerCharacterBase.h"
-#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 
 // Sets default values
 ATokenActorBase::ATokenActorBase()
@@ -20,7 +20,7 @@ ATokenActorBase::ATokenActorBase()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(CoinRootRotation);
 
-	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger Volume"));
+	TriggerBox = CreateDefaultSubobject<USphereComponent>(TEXT("Trigger Volume"));
 	TriggerBox->SetupAttachment(Mesh);
 
 	// HJook dynamic event

@@ -8,7 +8,7 @@
 
 #include "TokenActorBase.generated.h"
 
-class UBoxComponent;
+class USphereComponent;
 UCLASS()
 class GRAPPLE_API ATokenActorBase : public AActor
 {
@@ -23,7 +23,7 @@ private:
 		URotatingMovementComponent* RotationComponent;
 	
 	UPROPERTY(EditAnywhere)
-		UBoxComponent* TriggerBox;
+		USphereComponent* TriggerBox;
 
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* Mesh;
