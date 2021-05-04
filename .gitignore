@@ -72,3 +72,6 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Materials that can be downloaded outside project
+Content/NecrosUtilityMatPack/*
