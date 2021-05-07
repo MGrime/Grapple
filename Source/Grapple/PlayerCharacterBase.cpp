@@ -3,11 +3,14 @@
 
 #include "PlayerCharacterBase.h"
 
+#include "CheckpointActorBase.h"
+#include "GrappleGameModeBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayerCharacterBase::APlayerCharacterBase()
@@ -688,11 +691,57 @@ void APlayerCharacterBase::FellOutOfWorld(const UDamageType& dmgType)
 
 	if (World)
 	{
-		const auto AuthGameMode = World->GetAuthGameMode();
+		const auto AuthGameMode = Cast<AGrappleGameModeBase>(World->GetAuthGameMode());
 
 		if (AuthGameMode)
 		{
-			AuthGameMode->RestartPlayer(World->GetFirstPlayerController());
+			// Check for active check points
+			TArray<AActor*> CheckpointList;
+			UGameplayStatics::GetAllActorsOfClass(World, ACheckpointActorBase::StaticClass(), CheckpointList);
+
+			if (CheckpointList.Num() != 0)
+			{
+				// Cast to correct type
+				// This is a formality. Because of GetAllActors taking a static class input, i KNOW these pointers are this type
+				// Therefore down casting is safe
+				TArray<ACheckpointActorBase*> CheckpointsCast;
+				for (int32 i = 0; i < CheckpointList.Num(); ++i)
+				{
+					CheckpointsCast.Add(Cast<ACheckpointActorBase>(CheckpointList[i]));
+				}
+
+				// Now sort by level index to put the end at the front
+				CheckpointsCast.Sort([&](const ACheckpointActorBase& lhs, const ACheckpointActorBase& rhs)
+				{
+					return lhs.CheckpointIndex > rhs.CheckpointIndex;
+				});
+
+				// Find the latest activated checkpoint
+				const ACheckpointActorBase* SelectedCheckpoint = nullptr;
+				for (int32 i = 0; i < CheckpointsCast.Num(); ++i)
+				{
+					if (CheckpointsCast[i]->bIsChecked)
+					{
+						SelectedCheckpoint = CheckpointsCast[i];
+						break;
+					}
+				}
+
+				// Restart player and immediately teleport to checkpoint
+				AuthGameMode->RestartPlayer(World->GetFirstPlayerController());
+				const auto Player = UGameplayStatics::GetPlayerCharacter(World, 0);
+				if (Player && SelectedCheckpoint)
+				{
+					Player->SetActorLocation(SelectedCheckpoint->GetActorLocation());
+				}
+				
+				
+			}
+			else
+			{
+				// If no checkpoints then simply reload at player start
+				AuthGameMode->RestartPlayer(World->GetFirstPlayerController());
+			}
 		}
 	}
 }
