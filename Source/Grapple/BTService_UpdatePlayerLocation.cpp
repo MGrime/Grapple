@@ -30,7 +30,7 @@ void UBTService_UpdatePlayerLocation::TickNode(UBehaviorTreeComponent& OwnerComp
 			}
 		}
 
-		if (EnemyAIController->LineOfSightTo(PlayerRef) && EnemyAIController->IsInFront(PlayerRef))
+		if (EnemyAIController->LineOfSightTo(PlayerRef) && EnemyAIController->IsInFront(PlayerRef) && EnemyAIController->IsInDistance(PlayerRef))
 		{
 			OwnerComp.GetBlackboardComponent()->SetValueAsVector(GetSelectedBlackboardKey(), PlayerRef->GetActorLocation());
 		}

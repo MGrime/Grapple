@@ -49,3 +49,8 @@ bool AEnemyAIControllerBase::IsInFront(AActor* OtherActor) const
 
 
 }
+
+bool AEnemyAIControllerBase::IsInDistance(AActor* OtherActor) const
+{
+	return FVector::Dist(GetPawn()->GetActorLocation(), OtherActor->GetActorLocation()) < SightDistance;
+}

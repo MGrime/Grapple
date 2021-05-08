@@ -20,14 +20,19 @@ public:
 	UFUNCTION(BlueprintPure)
 		bool IsInFront(AActor* OtherActor) const;
 
+	UFUNCTION(BlueprintPure)
+		bool IsInDistance(AActor* OtherActor) const;
+
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
 		UBehaviorTree* EnemyBehaviorTree;
 
-private:
+	UPROPERTY(EditAnywhere)
+		float SightDistance = 5000.0f;
 
+private:
 	UPROPERTY()
 		APawn* PlayerPawnRef;
 };
