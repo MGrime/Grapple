@@ -93,10 +93,7 @@ void APlayerControllerBase::CallMoveForwards(float Value)
 {
 	if (PlayerChar && !bIsIgnoringInput)
 	{
-		if (!PlayerChar->HasJustLanded())
-		{
-			PlayerChar->MoveForwards(Value);
-		}
+		PlayerChar->MoveForwards(Value);
 	}
 }
 
@@ -104,10 +101,7 @@ void APlayerControllerBase::CallStrafe(float Value)
 {
 	if (PlayerChar && !bIsIgnoringInput)
 	{
-		if (!PlayerChar->HasJustLanded())
-		{
-			PlayerChar->Strafe(Value);
-		}
+		PlayerChar->Strafe(Value);
 	}
 }
 
