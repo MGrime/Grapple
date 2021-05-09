@@ -56,6 +56,7 @@ public:
 	void JumpPress();
 	void JumpRelease();
 	void CrouchToggle();
+	void Punch();
 
 	// Animation
 	UFUNCTION(BlueprintPure, Category = "Wall Running")
@@ -69,6 +70,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Landed")
 		bool HasJustLanded();
+
+	UFUNCTION(BlueprintPure, Category = "Attacking")
+		bool IsPunching();
 
 	UFUNCTION()
 		void NotifyCompletedAnimation(UAnimSequenceBase* CompletedAnimation);
@@ -105,6 +109,13 @@ private:
 	UPROPERTY(EditAnywhere)
 		bool bHasJustLanded;
 
+	#pragma endregion
+
+	#pragma region ATTACKING
+
+	UPROPERTY(EditAnywhere)
+		bool bPunching;
+	
 	#pragma endregion
 
 	#pragma region SPRINT

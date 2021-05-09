@@ -6,12 +6,19 @@
 #include "AIController.h"
 
 #include "EnemyProjectileBase.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 
 EBTNodeResult::Type UBTTask_ShootTargetActor::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	// Need something to fire
 	if (!ProjectileToFire)
+	{
+		return EBTNodeResult::Failed;
+	}
+
+	const auto BlackboardRef = OwnerComp.GetBlackboardComponent();
+	if (!BlackboardRef)
 	{
 		return EBTNodeResult::Failed;
 	}
@@ -23,11 +30,22 @@ EBTNodeResult::Type UBTTask_ShootTargetActor::ExecuteTask(UBehaviorTreeComponent
 	{
 		return EBTNodeResult::Failed;
 	}
+	
 
 	// Spawn projectile
-	const auto SpawnLocation = AIOwner->GetActorLocation();
-	const auto SpawnRotation = AIOwner->GetActorRotation();
-	GetWorld()->SpawnActor<AEnemyProjectileBase>(ProjectileToFire, SpawnLocation, SpawnRotation);
+
+	// Get target location and AI location
+	const auto PlayerLocation = BlackboardRef->GetValueAsVector(GetSelectedBlackboardKey());
+	const auto PawnLocation = AIOwner->GetActorLocation();
+
+	// Get vector between points
+	const auto AIToTarget = PlayerLocation - PawnLocation;
+
+	// Get rotator from this vector
+	const auto SpawnRotation = AIToTarget.Rotation();
+
+	// Fire towards target
+	GetWorld()->SpawnActor<AEnemyProjectileBase>(ProjectileToFire, PawnLocation, SpawnRotation);
 
 	return EBTNodeResult::Succeeded;
 	

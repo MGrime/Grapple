@@ -40,6 +40,8 @@ protected:
 
 	void CallCrouchToggle();
 
+	void CallPunch();
+
 	// Changes between the main menu and the options
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void ToggleMainMenuLoaded();

@@ -16,7 +16,7 @@ AEnemyProjectileBase::AEnemyProjectileBase()
 
 	// Collision volume for on hit code
 	LaserCollision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision Volume"));
-	LaserCollision->SetupAttachment(RootComponent);
+	RootComponent = LaserCollision;
 	
 	// Laser mesh to represent laser with fancy material
 	LaserMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Laser Mesh"));

@@ -87,6 +87,8 @@ void APlayerControllerBase::SetupInputComponent()
 	InputComponent->BindAction(TEXT("Jump"), IE_Released, this, &APlayerControllerBase::CallJumpRelease);
 
 	InputComponent->BindAction(TEXT("Crouch"), IE_Pressed, this, &APlayerControllerBase::CallCrouchToggle);
+
+	InputComponent->BindAction(TEXT("Punch"), IE_Pressed, this, &APlayerControllerBase::CallPunch);
 }
 
 void APlayerControllerBase::CallMoveForwards(float Value)
@@ -161,6 +163,15 @@ void APlayerControllerBase::CallCrouchToggle()
 		PlayerChar->CrouchToggle();
 	}
 }
+
+void APlayerControllerBase::CallPunch()
+{
+	if (PlayerChar && !bIsIgnoringInput)
+	{
+		PlayerChar->Punch();
+	}
+}
+
 
 void APlayerControllerBase::ToggleMainMenuLoaded()
 {

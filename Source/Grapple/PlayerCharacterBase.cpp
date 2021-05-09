@@ -36,6 +36,8 @@ APlayerCharacterBase::APlayerCharacterBase()
 	MaxJumps = 2;
 
 	bIsCrouching = false;
+
+	bPunching = false;
 }
 
 // Called when the game starts or when spawned
@@ -139,18 +141,24 @@ void APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void APlayerCharacterBase::MoveForwards(float Value)
 {
-	// Save the value
-	ForwardAxisValue = Value;
-	
-	AddMovementInput(Value * GetActorForwardVector());
+	if (!bPunching)
+	{
+		// Save the value
+		ForwardAxisValue = Value;
+
+		AddMovementInput(Value * GetActorForwardVector());
+	}
 }
 
 void APlayerCharacterBase::Strafe(float Value)
 {
-	// Save the value
-	RightAxisValue = Value;
-	
-	AddMovementInput(Value * GetActorRightVector());
+	if (!bPunching)
+	{
+		// Save the value
+		RightAxisValue = Value;
+
+		AddMovementInput(Value * GetActorRightVector());
+	}
 }
 
 void APlayerCharacterBase::LookVertical(float Value)
@@ -248,6 +256,14 @@ void APlayerCharacterBase::CrouchToggle()
 	
 	
 }
+void APlayerCharacterBase::Punch()
+{
+	// Can only punch if we arent already, arent crouching and arent wall running
+	if (!bPunching && !bIsCrouching && !bIsWallRunning)
+	{
+		bPunching = true;
+	}
+}
 
 bool APlayerCharacterBase::IsCrouching()
 {
@@ -259,6 +275,12 @@ bool APlayerCharacterBase::HasJustLanded()
 	return bHasJustLanded;
 }
 
+bool APlayerCharacterBase::IsPunching()
+{
+	return bPunching;
+}
+
+
 void APlayerCharacterBase::NotifyCompletedAnimation(UAnimSequenceBase* CompletedAnimation)
 {
 	const auto AnimationName = CompletedAnimation->GetName();
@@ -268,6 +290,10 @@ void APlayerCharacterBase::NotifyCompletedAnimation(UAnimSequenceBase* Completed
 	if (AnimationName.Equals("Landing"))
 	{
 		bHasJustLanded = false;
+	}
+	if (AnimationName.Equals("Punch"))
+	{
+		bPunching = false;
 	}
 }
 
