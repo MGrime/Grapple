@@ -51,6 +51,7 @@ void AGrappleGameModeBase::LoadLevelCon(FName LevelName)
 	{
 		GameInstance->bIsMainMenu = false;
 		GameInstance->bIsLevelSelect = false;
+		GameInstance->StopTitleMusic();
 	}
 	
 	LoadLevel(LevelName);

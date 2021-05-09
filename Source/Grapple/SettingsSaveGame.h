@@ -28,5 +28,18 @@ public:
 
 	#pragma region SAVE VALUES
 
+	UPROPERTY(EditAnywhere)
+		float MusicSoundVolume = 1.0f;
+	
+	#pragma endregion
+
+	#pragma region FUNCTIONS
+	
+	UFUNCTION(BlueprintPure)
+		float GetMusicVolumeBP();
+
+	UFUNCTION(BlueprintCallable)
+		void SetMusicVolumeBP(float Value);
+
 	#pragma endregion
 };

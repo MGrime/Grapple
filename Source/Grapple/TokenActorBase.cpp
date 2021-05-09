@@ -6,6 +6,7 @@
 #include "GrappleGameStateBase.h"
 #include "PlayerCharacterBase.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ATokenActorBase::ATokenActorBase()
@@ -46,6 +47,17 @@ void ATokenActorBase::TriggerInteraction(UPrimitiveComponent* HitComp, AActor* O
 			const auto GameState = World->GetGameState<AGrappleGameStateBase>();
 
 			GameState->LevelTokens++;
+
+			if (PickupSound)
+			{
+				UGameplayStatics::PlaySoundAtLocation(
+					GetWorld(),
+					PickupSound,
+					GetActorLocation(),
+					FRotator::ZeroRotator,
+					0.4f
+				);
+			}
 
 			Destroy();
 		}

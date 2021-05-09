@@ -77,6 +77,9 @@ public:
 	UFUNCTION()
 		void NotifyCompletedAnimation(UAnimSequenceBase* CompletedAnimation);
 
+	UFUNCTION()
+		void NotifyAnimationEvent(FString EventData);
+
 	// IK Getters
 	UFUNCTION(BlueprintCallable, Category = "IK")
 		float GetRightFootIK();
@@ -109,6 +112,20 @@ private:
 	UPROPERTY(EditAnywhere)
 		bool bHasJustLanded;
 
+	// True play right footstep, false play left footstep. easy peasy
+	UPROPERTY(EditAnywhere)
+		bool bIsRightFoot;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* RightFootstep;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* LeftFootstep;
+
+	// Track the last sound to fix any lagging on jump
+	UPROPERTY()
+		UAudioComponent* LastPlayedSound;
+	
 	#pragma endregion
 
 	#pragma region ATTACKING

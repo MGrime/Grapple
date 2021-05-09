@@ -18,6 +18,13 @@ class GRAPPLE_API UGrappleGameInstanceBase : public UGameInstance
 	GENERATED_BODY()
 protected:
 	virtual void Init() override;
+
+	UPROPERTY()
+		UAudioComponent* MainMenuMusicInstance;
+
+	UPROPERTY()
+		UAudioComponent* LevelMusicInstance;
+	
 public:
 	#pragma region VARIABLES
 	
@@ -33,6 +40,12 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		USettingsSaveGame* SettingsSaveGame = nullptr;
 
+	UPROPERTY(EditAnywhere)
+		USoundBase* MainMenuMusic = nullptr;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* LevelMusic = nullptr;
+	
 	#pragma endregion
 
 	#pragma region FUNCTIONS
@@ -43,6 +56,40 @@ public:
 	// Saves active save data.
 	UFUNCTION(BlueprintCallable)
 		void SaveActive();
+
+	#pragma region SOUND
+	
+	// Plays main music
+	UFUNCTION(BlueprintCallable)
+		void PlayTitleMusic();
+
+	// Pause/Unpause state dependent
+	UFUNCTION(BlueprintCallable)
+		void ToggleTitleMusic();
+
+	// Stops main music playing
+	UFUNCTION(BlueprintCallable)
+		void StopTitleMusic();
+	
+	// Plays level music
+	UFUNCTION(BlueprintCallable)
+		void PlayLevelMusic();
+
+	// Pause/Unpause state dependent
+	UFUNCTION(BlueprintCallable)
+		void ToggleLevelMusic();
+
+	// Stops level music playing
+	UFUNCTION(BlueprintCallable)
+		void StopLevelMusic();
+	
+
+	// updates volume
+	UFUNCTION()
+		void UpdateMusicVolume();
+	
+	#pragma endregion
+	
 
 	#pragma endregion
 

@@ -7,6 +7,7 @@
 #include "EnemyCharacterBase.h"
 #include "GrappleGameModeBase.h"
 #include "Camera/CameraComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
@@ -151,7 +152,7 @@ void APlayerCharacterBase::Tick(float DeltaTime)
 				FistLocation,
 				FQuat::Identity,
 				ObjectsToCollide,
-				FCollisionShape::MakeCapsule(22.0f, 22.0f)
+				FCollisionShape::MakeCapsule(50.0f, 50.0f)
 			);
 
 			if (HasHitConnected)
@@ -257,6 +258,15 @@ void APlayerCharacterBase::JumpPress()
 			// Disable crouch after the jump
 			CrouchToggle();
 		}
+
+		// Cancel any footsteps
+		if (LastPlayedSound)
+		{
+			if (LastPlayedSound->IsPlaying())
+			{
+				LastPlayedSound->Stop();
+			}
+		}
 	}
 }
 
@@ -341,6 +351,34 @@ void APlayerCharacterBase::NotifyCompletedAnimation(UAnimSequenceBase* Completed
 	{
 		bPunching = false;
 	}
+}
+
+void APlayerCharacterBase::NotifyAnimationEvent(FString EventData)
+{
+	if (EventData.Equals("Footstep"))
+	{
+		// Get sound
+		USoundBase* SoundToPlay = bIsRightFoot ? RightFootstep : LeftFootstep;
+
+		if (SoundToPlay)
+		{
+			// Get foot location
+			const FVector FootLocation = bIsRightFoot ?
+				GetMesh()->GetSocketLocation(FName(TEXT("RightFoot"))) :
+				GetMesh()->GetSocketLocation(FName(TEXT("LeftFoot")));
+
+			LastPlayedSound = UGameplayStatics::SpawnSoundAtLocation(
+				GetWorld(),
+				SoundToPlay,
+				FootLocation,
+				FRotator::ZeroRotator,
+				2.0f
+			);
+		}
+
+		
+	}
+	
 }
 
 #pragma region WALL RUNNING

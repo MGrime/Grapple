@@ -6,6 +6,7 @@
 #include "GrappleGameInstanceBase.h"
 #include "PlayerCharacterBase.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 void APlayerControllerBase::BeginPlay()
 {
@@ -29,6 +30,9 @@ void APlayerControllerBase::BeginPlay()
 					MainMenuWidget->AddToViewport();
 					UE_LOG(LogTemp, Warning, TEXT("Created menu widget!"));
 				}
+
+				GameInstance->PlayTitleMusic();
+				
 			}
 			else if (GameInstance->bIsLevelSelect)
 			{

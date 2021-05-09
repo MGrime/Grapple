@@ -3,6 +3,7 @@
 
 #include "GrappleGameInstanceBase.h"
 
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 void UGrappleGameInstanceBase::Init()
@@ -47,6 +48,96 @@ void UGrappleGameInstanceBase::SaveActive()
 
 	// Async save
 	UGameplayStatics::AsyncSaveGameToSlot(ActiveSaveGame, ActiveSaveGame->SaveSlotName, ActiveSaveGame->UserIndex, SavedDelegate);
+}
+
+void UGrappleGameInstanceBase::PlayTitleMusic()
+{
+	if (MainMenuMusic)
+	{
+		if (!MainMenuMusicInstance)
+		{
+			MainMenuMusicInstance = UGameplayStatics::SpawnSound2D(
+				GetWorld(),
+				MainMenuMusic,
+				SettingsSaveGame->MusicSoundVolume,
+				1.0f,
+				0.0f,
+				nullptr,
+				true,
+				false
+			);
+		}
+		else
+		{
+			MainMenuMusicInstance->Play(0.0f);
+		}
+	}
+	
+	
+}
+
+void UGrappleGameInstanceBase::ToggleTitleMusic()
+{
+	if (MainMenuMusicInstance->IsPlaying())
+	{
+		MainMenuMusicInstance->SetPaused(!MainMenuMusicInstance->bIsPaused);
+	}
+}
+
+void UGrappleGameInstanceBase::StopTitleMusic()
+{
+	if (MainMenuMusicInstance->IsPlaying())
+	{
+		MainMenuMusicInstance->Stop();
+	}
+}
+
+void UGrappleGameInstanceBase::PlayLevelMusic()
+{
+	if (LevelMusic)
+	{
+		if (!LevelMusicInstance)
+		{
+			LevelMusicInstance = UGameplayStatics::SpawnSound2D(
+				GetWorld(),
+				LevelMusic,
+				SettingsSaveGame->MusicSoundVolume,
+				1.0f,
+				0.0f,
+				nullptr,
+				true,
+				false
+			);
+		}
+		else
+		{
+			LevelMusicInstance->Play(0.0f);
+		}
+	}
+
+
+}
+
+void UGrappleGameInstanceBase::ToggleLevelMusic()
+{
+	if (LevelMusicInstance->IsPlaying())
+	{
+		LevelMusicInstance->SetPaused(!LevelMusicInstance->bIsPaused);
+	}
+}
+
+void UGrappleGameInstanceBase::StopLevelMusic()
+{
+	if (LevelMusicInstance->IsPlaying())
+	{
+		LevelMusicInstance->Stop();
+	}
+}
+
+void UGrappleGameInstanceBase::UpdateMusicVolume()
+{
+	MainMenuMusicInstance->SetVolumeMultiplier(SettingsSaveGame->MusicSoundVolume);
+	LevelMusicInstance->SetVolumeMultiplier(SettingsSaveGame->MusicSoundVolume);
 }
 
 void UGrappleGameInstanceBase::ActiveSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess)
