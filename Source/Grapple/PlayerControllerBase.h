@@ -15,6 +15,8 @@ class GRAPPLE_API APlayerControllerBase : public APlayerController
 {
 	GENERATED_BODY()
 public:
+	APlayerControllerBase();
+	
 	// Called when level is ended
 	UFUNCTION(BlueprintCallable, Category = "UI")
 		void LoadLevelCompleteUI();
@@ -42,9 +44,16 @@ protected:
 
 	void CallPunch();
 
+	void CallPause();
+
+	
 	// Changes between the main menu and the options
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void ToggleMainMenuLoaded();
+
+	// Called by blueprint not input
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	void Unpause();
 
 
 private:
@@ -64,6 +73,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> LevelCompleteClass;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> PauseClass;
+
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* MainMenuWidget;
 
@@ -72,6 +84,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* LevelSelectWidget;
+
+	UPROPERTY(VisibleAnywhere)
+		UUserWidget* PauseWidget;
 
 	UPROPERTY()
 		bool bIsIgnoringInput;

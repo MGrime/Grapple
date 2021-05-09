@@ -8,6 +8,12 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
+APlayerControllerBase::APlayerControllerBase()
+{
+	// Make sure we can tick when paused otherwise we cant disable the pause
+	PrimaryActorTick.bTickEvenWhenPaused = true;
+}
+
 void APlayerControllerBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -93,6 +99,8 @@ void APlayerControllerBase::SetupInputComponent()
 	InputComponent->BindAction(TEXT("Crouch"), IE_Pressed, this, &APlayerControllerBase::CallCrouchToggle);
 
 	InputComponent->BindAction(TEXT("Punch"), IE_Pressed, this, &APlayerControllerBase::CallPunch);
+
+	InputComponent->BindAction(TEXT("Pause"), IE_Pressed, this, &APlayerControllerBase::CallPause);
 }
 
 void APlayerControllerBase::CallMoveForwards(float Value)
@@ -176,6 +184,31 @@ void APlayerControllerBase::CallPunch()
 	}
 }
 
+void APlayerControllerBase::CallPause()
+{
+	UGameplayStatics::SetGamePaused(GetWorld(), true);
+
+	if (PauseClass)
+	{
+		PauseWidget = CreateWidget(this, PauseClass);
+		PauseWidget->AddToViewport();
+		
+	}
+
+	// Set UI input mode
+	SetInputMode(FInputModeUIOnly());
+	SetShowMouseCursor(true);
+
+	// Stop music
+	const auto GameInstance = GetGameInstance<UGrappleGameInstanceBase>();
+
+	if (GameInstance)
+	{
+		GameInstance->ToggleLevelMusic();
+	}
+	
+}
+
 
 void APlayerControllerBase::ToggleMainMenuLoaded()
 {
@@ -190,6 +223,29 @@ void APlayerControllerBase::ToggleMainMenuLoaded()
 		{
 			OptionMenuWidget->RemoveFromViewport();
 			MainMenuWidget->AddToViewport();
+		}
+	}
+}
+
+void APlayerControllerBase::Unpause()
+{
+	if (UGameplayStatics::IsGamePaused(GetWorld()))
+	{
+		UGameplayStatics::SetGamePaused(GetWorld(),false);
+		if (PauseWidget)
+		{
+			PauseWidget->RemoveFromViewport();
+		}
+
+		SetInputMode(FInputModeGameOnly());
+		SetShowMouseCursor(false);
+
+		// Start music
+		const auto GameInstance = GetGameInstance<UGrappleGameInstanceBase>();
+
+		if (GameInstance)
+		{
+			GameInstance->ToggleLevelMusic();
 		}
 	}
 }
