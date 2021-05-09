@@ -4,6 +4,7 @@
 #include "PlayerCharacterBase.h"
 
 #include "CheckpointActorBase.h"
+#include "EnemyCharacterBase.h"
 #include "GrappleGameModeBase.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -125,6 +126,51 @@ void APlayerCharacterBase::Tick(float DeltaTime)
 		// Update the wall run
 		UpdateWallRun();
 	}
+	
+	#pragma endregion
+
+	#pragma region PUNCHING
+
+	if (bPunching)
+	{
+		// Get socket location of fist
+		const auto FistLocation = GetMesh()->GetSocketLocation(FName(TEXT("RightHand")));
+
+		// Capsule trace for objects
+		const auto World = GetWorld();
+		if (World)
+		{
+			// To store the hit actor
+			FHitResult OutHit;
+			// We only want to collide with pawns
+			const auto ObjectsToCollide = FCollisionObjectQueryParams(ECC_Pawn);
+			// Trace to find the first hit object
+			const auto HasHitConnected = World->SweepSingleByObjectType(
+				OutHit,
+				FistLocation,
+				FistLocation,
+				FQuat::Identity,
+				ObjectsToCollide,
+				FCollisionShape::MakeCapsule(22.0f, 22.0f)
+			);
+
+			if (HasHitConnected)
+			{
+				// This means we have hit an enemy if the cast works
+				const auto Enemy = Cast<AEnemyCharacterBase>(OutHit.Actor);
+				if (Enemy)
+				{
+					if (IsValid(Enemy))
+					{
+						Enemy->ReceivePunch();
+					}
+				}
+			}
+		}
+		
+		
+	}
+	
 	
 	#pragma endregion
 

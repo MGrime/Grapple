@@ -31,4 +31,17 @@ void AEnemyCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+FVector AEnemyCharacterBase::GetHeadRotationVector()
+{
+	// Get the data
+	FVector Location;
+	FRotator Rotation;
+	GetMesh()->GetSocketWorldLocationAndRotation(FName(TEXT("Head")), Location, Rotation);
 
+	return Rotation.Vector() * -1.0f;
+}
+
+void AEnemyCharacterBase::ReceivePunch()
+{
+	Destroy();
+}

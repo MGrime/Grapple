@@ -26,4 +26,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Returns the head vector
+	FVector GetHeadRotationVector();
+
+	// Called by player on hit
+	void ReceivePunch();
+
 };

@@ -3,6 +3,7 @@
 
 #include "EnemyAIControllerBase.h"
 
+#include "EnemyCharacterBase.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Perception/AIPerceptionComponent.h"
@@ -30,10 +31,10 @@ void AEnemyAIControllerBase::BeginPlay()
 
 bool AEnemyAIControllerBase::IsInFront(AActor* OtherActor) const
 {
-	const auto& AIPawn = GetPawn();
+	const auto& AIPawn = Cast<AEnemyCharacterBase>(GetPawn());
 
 	// Copy required variables
-	const auto AIForward = AIPawn->GetActorForwardVector();
+	const auto AIForward = AIPawn->GetHeadRotationVector();
 	const auto OtherPosition = OtherActor->GetActorLocation();
 	const auto AIPosition = AIPawn->GetActorLocation();
 
