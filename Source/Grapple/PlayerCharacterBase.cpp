@@ -708,6 +708,9 @@ void APlayerCharacterBase::UpdateWallRun()
 
 void APlayerCharacterBase::EndWallRun(EWallRunEndReason Reason)
 {
+	// Don't want to flip of the wall it looks silly
+	bSecondJump = false;
+	
 	switch (Reason)
 	{
 	case EWallRunEndReason::FallOff:
