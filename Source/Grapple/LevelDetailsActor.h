@@ -25,7 +25,7 @@ public:
 		FString LevelName;
 
 	// This is the longest time for gold. Silver adds 1/3, bronze adds another 1/3
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float TimeForGold;
 
 	// This is read and filled automatically using a special method
