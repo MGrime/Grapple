@@ -20,6 +20,8 @@ public:
 		FName GetLevelTransferName();
 	
 protected:
+	virtual void BeginPlay() override;
+	
 	UPROPERTY(EditAnywhere)
 		UBoxComponent* TriggerBox;
 
@@ -34,4 +36,9 @@ protected:
 	UFUNCTION()
 	void TriggerInteraction(class UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+private:
+	// Gathered at runtime
+	// Only transfer after > 3/4 of the tokens have been collected
+	UPROPERTY()
+		int32 TokensInLevel;
 };

@@ -76,6 +76,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> PauseClass;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> HUDClass;
+
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* MainMenuWidget;
 
@@ -87,6 +90,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* PauseWidget;
+
+	UPROPERTY(VisibleAnywhere)
+		UUserWidget* HUDWidget;
 
 	UPROPERTY()
 		bool bIsIgnoringInput;

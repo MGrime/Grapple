@@ -9,6 +9,7 @@
 #include "LevelDetailsActor.h"
 #include "PlayerCharacterBase.h"
 #include "PlayerControllerBase.h"
+#include "TokenActorBase.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -31,6 +32,16 @@ FName ALevelTransferVolumeBase::GetLevelTransferName()
 	return LevelTransferName;
 }
 
+void ALevelTransferVolumeBase::BeginPlay()
+{
+	// Get how many tokens
+	TArray<AActor*> TokensInLevelArray;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATokenActorBase::StaticClass(), TokensInLevelArray);
+	TokensInLevel = TokensInLevelArray.Num();
+
+	UE_LOG(LogTemp, Warning, TEXT("To complete level collect: %d Tokens"), (TokensInLevel / 4) * 3);
+}
+
 void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 
@@ -39,7 +50,7 @@ void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, 
 	const auto Player = Cast<APlayerCharacterBase>(OtherActor);
 	// The cast works so player must have been the collider
 	if (Player)
-	{
+	{		
 		const auto World = GetWorld();
 
 		if (World)
@@ -51,6 +62,16 @@ void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, 
 				// get the instance and state
 				const auto GameInstance = World->GetGameInstance<UGrappleGameInstanceBase>();
 				const auto GameState = World->GetGameState<AGrappleGameStateBase>();
+
+				// Check if valid to trigger (more than 3/4 collected
+				if (GameState->LevelTokens < (TokensInLevel / 4) * 3)
+				{
+					UE_LOG(LogTemp,Warning,TEXT("Not enough tokens collected!"))
+					return;
+					
+				}
+
+				
 				const auto LevelDetails = Cast<ALevelDetailsActor>(UGameplayStatics::GetActorOfClass(World, ALevelDetailsActor::StaticClass()));
 				// Add to the save game
 				// Check if the level times already exists

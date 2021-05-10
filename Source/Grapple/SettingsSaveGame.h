@@ -30,6 +30,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		float MusicSoundVolume = 1.0f;
+
+	UPROPERTY(EditAnywhere)
+		uint32 HorizontalResolution = 1600;
 	
 	#pragma endregion
 

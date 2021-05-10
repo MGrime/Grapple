@@ -51,6 +51,15 @@ void APlayerControllerBase::BeginPlay()
 				}
 				
 			}
+			else
+			{
+				HUDWidget = CreateWidget(this, HUDClass);
+
+				if (HUDWidget)
+				{
+					HUDWidget->AddToViewport();
+				}
+			}
 
 			if (GameInstance->bIsMainMenu || GameInstance->bIsLevelSelect)
 			{
@@ -186,26 +195,36 @@ void APlayerControllerBase::CallPunch()
 
 void APlayerControllerBase::CallPause()
 {
-	UGameplayStatics::SetGamePaused(GetWorld(), true);
-
-	if (PauseClass)
+	if (!bIsIgnoringInput)
 	{
-		PauseWidget = CreateWidget(this, PauseClass);
-		PauseWidget->AddToViewport();
+		UGameplayStatics::SetGamePaused(GetWorld(), true);
+
+		if (PauseClass)
+		{
+			PauseWidget = CreateWidget(this, PauseClass);
+			PauseWidget->AddToViewport();
+
+		}
 		
+
+		// Set UI input mode
+		SetInputMode(FInputModeUIOnly());
+		SetShowMouseCursor(true);
+
+		// Stop music
+		const auto GameInstance = GetGameInstance<UGrappleGameInstanceBase>();
+
+		if (GameInstance)
+		{
+			GameInstance->ToggleLevelMusic();
+		}
+
+		if (HUDWidget)
+		{
+			HUDWidget->RemoveFromViewport();
+		}
 	}
-
-	// Set UI input mode
-	SetInputMode(FInputModeUIOnly());
-	SetShowMouseCursor(true);
-
-	// Stop music
-	const auto GameInstance = GetGameInstance<UGrappleGameInstanceBase>();
-
-	if (GameInstance)
-	{
-		GameInstance->ToggleLevelMusic();
-	}
+	
 	
 }
 
@@ -246,6 +265,11 @@ void APlayerControllerBase::Unpause()
 		if (GameInstance)
 		{
 			GameInstance->ToggleLevelMusic();
+		}
+
+		if (HUDWidget)
+		{
+			HUDWidget->AddToViewport();
 		}
 	}
 }
