@@ -39,6 +39,8 @@ APlayerCharacterBase::APlayerCharacterBase()
 
 	bIsCrouching = false;
 
+	bSecondJump = false;
+	
 	bPunching = false;
 }
 
@@ -241,6 +243,16 @@ void APlayerCharacterBase::JumpPress()
 	{
 		// We have consumed a jump
 
+		// Track for animation
+		if (JumpsLeft == 0)
+		{
+			bSecondJump = true;
+		}
+		else
+		{
+			bSecondJump = false;
+		}
+		
 		// Launch the character
 		const FVector LaunchVel = FindLaunchVelocity();
 		LaunchCharacter(LaunchVel,false,true);
@@ -375,10 +387,17 @@ void APlayerCharacterBase::NotifyAnimationEvent(FString EventData)
 				2.0f
 			);
 		}
-
-		
+	}
+	else if (EventData.Equals("Flip Finished"))
+	{
+		bSecondJump = false;
 	}
 	
+}
+
+bool APlayerCharacterBase::IsSecondJump()
+{
+	return bSecondJump;
 }
 
 #pragma region WALL RUNNING

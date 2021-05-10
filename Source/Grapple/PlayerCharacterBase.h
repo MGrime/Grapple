@@ -80,6 +80,10 @@ public:
 	UFUNCTION()
 		void NotifyAnimationEvent(FString EventData);
 
+	// Returns true if jumps left < max jumps. If equal it is our first jump
+	UFUNCTION(BlueprintPure)
+		bool IsSecondJump();
+
 	// IK Getters
 	UFUNCTION(BlueprintCallable, Category = "IK")
 		float GetRightFootIK();
@@ -177,6 +181,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Wall Running")
 		int MaxJumps;
+
+	// For animation
+	UPROPERTY(VisibleAnywhere, Category = " Wall Running")
+		bool bSecondJump;
 
 	UPROPERTY(EditAnywhere, Category = "Wall Running")
 		float RightAxisValue;
