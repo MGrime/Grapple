@@ -18,7 +18,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		FName GetLevelTransferName();
-	
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -32,6 +32,16 @@ protected:
 	// The index of the level this box is placed in
 	UPROPERTY(EditAnywhere)
 		int32 LevelPlacedIndex;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* SuccessSound;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* ErrorSound;
+
+	// Boolean accessed by HUD blueprint to pulse coin text on error
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool bPulseErrorText;
 
 	UFUNCTION()
 	void TriggerInteraction(class UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

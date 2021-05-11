@@ -67,6 +67,17 @@ void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, 
 				if (GameState->LevelTokens < (TokensInLevel / 4) * 3)
 				{
 					UE_LOG(LogTemp,Warning,TEXT("Not enough tokens collected!"))
+
+					if (ErrorSound)
+					{
+						UGameplayStatics::PlaySound2D(
+							World,
+							ErrorSound
+						);
+					}
+					// Set true. Will be unset by HUD Blueprint when done
+					bPulseErrorText = true;
+					
 					return;
 					
 				}
@@ -110,6 +121,15 @@ void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, 
 
 				// Call toggle ui on player
 				Player->GetController<APlayerControllerBase>()->LoadLevelCompleteUI();
+
+				if (SuccessSound)
+				{
+					UGameplayStatics::PlaySound2D(
+						World,
+						SuccessSound
+					);
+				}
+				
 			}
 		}
 	}
