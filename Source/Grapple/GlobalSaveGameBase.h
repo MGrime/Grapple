@@ -13,7 +13,8 @@ USTRUCT()
 struct FLevelTimeData
 {
 	GENERATED_BODY()
-	
+
+	UPROPERTY()
 	float Time;
 };
 
@@ -22,7 +23,10 @@ struct FLevelTokenData
 {
 	GENERATED_BODY()
 	
+	UPROPERTY()
 	int32 TokensCollected;
+
+	UPROPERTY()
 	int32 TokensInLevel;
 };
 
@@ -40,10 +44,10 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Config")
 		uint32 UserIndex;
 	
-	UPROPERTY(EditAnywhere, Category = "Levels")
+	UPROPERTY(EditAnywhere, Category = "Levels", SaveGame)
 		TMap<int32,FLevelTimeData> LevelTimes;
 
-	UPROPERTY(EditAnywhere, Category = "Levels")
+	UPROPERTY(EditAnywhere, Category = "Levels", SaveGame)
 		TMap<int32,FLevelTokenData> LevelTokens;
 
 

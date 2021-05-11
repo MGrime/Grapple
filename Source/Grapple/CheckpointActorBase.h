@@ -27,6 +27,9 @@ public:
 	// The area to trigger the box
 	UPROPERTY(EditAnywhere)
 		UBoxComponent* TriggerBox;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* CheckpointSound;
 	
 protected:
 	UFUNCTION()

@@ -5,6 +5,7 @@
 #include "PlayerCharacterBase.h"
 
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ACheckpointActorBase::ACheckpointActorBase()
@@ -31,6 +32,16 @@ void ACheckpointActorBase::TriggerInteraction(UPrimitiveComponent* HitComp, AAct
 	if (Player)
 	{
 		bIsChecked = true;
+
+		if (CheckpointSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(
+				GetWorld(),
+				CheckpointSound,
+				GetActorLocation(),
+				FRotator::ZeroRotator
+			);
+		}
 	}
 	
 }

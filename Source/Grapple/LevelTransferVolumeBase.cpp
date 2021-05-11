@@ -89,7 +89,7 @@ void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, 
 				if (GameInstance->ActiveSaveGame->LevelTimes.Contains(LevelPlacedIndex))
 				{
 					// Only update if time is better
-					if (GameInstance->ActiveSaveGame->LevelTimes[LevelPlacedIndex].Time > GameState->LevelTimer)
+					if (GameState->LevelTimer < GameInstance->ActiveSaveGame->LevelTimes[LevelPlacedIndex].Time)
 					{
 						GameInstance->ActiveSaveGame->LevelTimes[LevelPlacedIndex].Time = GameState->LevelTimer;
 					}
@@ -102,7 +102,7 @@ void ALevelTransferVolumeBase::TriggerInteraction(UPrimitiveComponent* HitComp, 
 				// Check for tokens count
 				if (GameInstance->ActiveSaveGame->LevelTokens.Contains(LevelPlacedIndex))
 				{
-					if (GameInstance->ActiveSaveGame->LevelTokens[LevelPlacedIndex].TokensCollected < GameState->LevelTokens)
+					if (GameState->LevelTokens > GameInstance->ActiveSaveGame->LevelTokens[LevelPlacedIndex].TokensCollected)
 					{
 						GameInstance->ActiveSaveGame->LevelTokens[LevelPlacedIndex] = FLevelTokenData{ GameState->LevelTokens,LevelDetails->TotalTokenCount };
 					}

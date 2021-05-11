@@ -54,26 +54,17 @@ void UGrappleGameInstanceBase::PlayTitleMusic()
 {
 	if (MainMenuMusic)
 	{
-		if (!MainMenuMusicInstance)
-		{
-			MainMenuMusicInstance = UGameplayStatics::SpawnSound2D(
-				GetWorld(),
-				MainMenuMusic,
-				SettingsSaveGame->MusicSoundVolume,
-				1.0f,
-				0.0f,
-				nullptr,
-				true,
-				false
-			);
-		}
-		else
-		{
-			MainMenuMusicInstance->Play(0.0f);
-		}
-	}
-	
-	
+		MainMenuMusicInstance = UGameplayStatics::SpawnSound2D(
+			GetWorld(),
+			MainMenuMusic,
+			SettingsSaveGame->MusicSoundVolume,
+			1.0f,
+			0.0f,
+			nullptr,
+			true,
+			false
+		);
+	}	
 }
 
 void UGrappleGameInstanceBase::ToggleTitleMusic()
@@ -96,23 +87,16 @@ void UGrappleGameInstanceBase::PlayLevelMusic()
 {
 	if (LevelMusic)
 	{
-		if (!LevelMusicInstance)
-		{
-			LevelMusicInstance = UGameplayStatics::SpawnSound2D(
-				GetWorld(),
-				LevelMusic,
-				SettingsSaveGame->MusicSoundVolume,
-				1.0f,
-				0.0f,
-				nullptr,
-				true,
-				false
-			);
-		}
-		else
-		{
-			LevelMusicInstance->Play(0.0f);
-		}
+		LevelMusicInstance = UGameplayStatics::SpawnSound2D(
+			GetWorld(),
+			LevelMusic,
+			SettingsSaveGame->MusicSoundVolume,
+			1.0f,
+			0.0f,
+			nullptr,
+			true,
+			false
+		);
 	}
 
 
