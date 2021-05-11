@@ -133,59 +133,6 @@ void APlayerCharacterBase::Tick(float DeltaTime)
 	#pragma endregion
 
 	#pragma region PUNCHING
-
-	if (bPunching)
-	{
-		// Get socket location of fist
-		const auto FistLocation = GetMesh()->GetSocketLocation(FName(TEXT("RightHand")));
-
-		// Capsule trace for objects
-		const auto World = GetWorld();
-		if (World)
-		{
-			// To store the hit actor
-			FHitResult OutHit;
-			// We only want to collide with pawns
-			const auto ObjectsToCollide = FCollisionObjectQueryParams(ECC_Pawn);
-			// Trace to find the first hit object
-			const auto HasHitConnected = World->SweepSingleByObjectType(
-				OutHit,
-				FistLocation,
-				FistLocation,
-				FQuat::Identity,
-				ObjectsToCollide,
-				FCollisionShape::MakeCapsule(22.0f, 22.0f)
-			);
-
-			if (HasHitConnected)
-			{
-				// This means we have hit an enemy if the cast works
-				const auto Enemy = Cast<AEnemyCharacterBase>(OutHit.Actor);
-				if (Enemy)
-				{
-					if (IsValid(Enemy))
-					{
-						Enemy->ReceivePunch();
-
-						if (PunchingSound)
-						{
-							UGameplayStatics::PlaySoundAtLocation(
-								World,
-								PunchingSound,
-								FistLocation,
-								FRotator::ZeroRotator
-							);
-						}
-						
-					}
-				}
-			}
-		}
-		
-		
-	}
-	
-	
 	#pragma endregion
 
 	// Update inverse kinematics
@@ -372,7 +319,9 @@ void APlayerCharacterBase::NotifyCompletedAnimation(UAnimSequenceBase* Completed
 	}
 	if (AnimationName.Equals("Punch"))
 	{
+
 		bPunching = false;
+
 	}
 }
 
@@ -402,6 +351,54 @@ void APlayerCharacterBase::NotifyAnimationEvent(FString EventData)
 	else if (EventData.Equals("Flip Finished"))
 	{
 		bSecondJump = false;
+	}
+	else if (EventData.Equals("Punch"))
+	{
+		// Get socket location of fist
+		const auto FistLocation = GetMesh()->GetSocketLocation(FName(TEXT("RightHand")));
+
+		// Capsule trace for objects
+		const auto World = GetWorld();
+		if (World)
+		{
+			// To store the hit actor
+			FHitResult OutHit;
+			// We only want to collide with pawns
+			const auto ObjectsToCollide = FCollisionObjectQueryParams(ECC_Pawn);
+			// Trace to find the first hit object
+			const auto HasHitConnected = World->SweepSingleByObjectType(
+				OutHit,
+				FistLocation,
+				FistLocation,
+				FQuat::Identity,
+				ObjectsToCollide,
+				FCollisionShape::MakeCapsule(22.0f, 22.0f)
+			);
+
+			if (HasHitConnected)
+			{
+				// This means we have hit an enemy if the cast works
+				const auto Enemy = Cast<AEnemyCharacterBase>(OutHit.Actor);
+				if (Enemy)
+				{
+					if (IsValid(Enemy))
+					{
+						Enemy->ReceivePunch();
+
+						if (PunchingSound)
+						{
+							UGameplayStatics::PlaySoundAtLocation(
+								World,
+								PunchingSound,
+								FistLocation,
+								FRotator::ZeroRotator
+							);
+						}
+
+					}
+				}
+			}
+		}
 	}
 	
 }
