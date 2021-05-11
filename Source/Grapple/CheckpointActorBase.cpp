@@ -33,7 +33,8 @@ void ACheckpointActorBase::TriggerInteraction(UPrimitiveComponent* HitComp, AAct
 	{
 		bIsChecked = true;
 
-		if (CheckpointSound)
+		// Only play when first check
+		if (CheckpointSound && !bIsChecked)
 		{
 			UGameplayStatics::PlaySoundAtLocation(
 				GetWorld(),

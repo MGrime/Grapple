@@ -35,6 +35,9 @@ public:
 		bool bIsLevelSelect = false;
 
 	UPROPERTY(BlueprintReadWrite)
+		bool bIsThanksScreen = false;
+
+	UPROPERTY(BlueprintReadWrite)
 		UGlobalSaveGameBase* ActiveSaveGame = nullptr;
 
 	UPROPERTY(BlueprintReadWrite)

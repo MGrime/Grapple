@@ -51,6 +51,15 @@ void APlayerControllerBase::BeginPlay()
 				}
 				
 			}
+			else if (GameInstance->bIsThanksScreen)
+			{
+				ThanksWidget = CreateWidget(this, ThanksClass);
+
+				if (ThanksWidget)
+				{
+					ThanksWidget->AddToViewport();
+				}
+			}
 			else
 			{
 				HUDWidget = CreateWidget(this, HUDClass);
@@ -61,7 +70,7 @@ void APlayerControllerBase::BeginPlay()
 				}
 			}
 
-			if (GameInstance->bIsMainMenu || GameInstance->bIsLevelSelect)
+			if (GameInstance->bIsMainMenu || GameInstance->bIsLevelSelect || GameInstance->bIsThanksScreen)
 			{
 				// Set UI input mode
 				SetInputMode(FInputModeUIOnly());

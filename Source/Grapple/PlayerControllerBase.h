@@ -67,6 +67,9 @@ private:
 		TSubclassOf<UUserWidget> OptionsClass;
 
 	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> ThanksClass;
+
+	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> LevelSelectClass;
 
 	// Has no accompying pointer as it gets made and set to viewport, then immedately destoryed when new level loaded.
@@ -84,6 +87,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* OptionMenuWidget;
+
+	UPROPERTY(VisibleAnywhere)
+		UUserWidget* ThanksWidget;
 
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* LevelSelectWidget;
