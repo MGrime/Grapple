@@ -154,7 +154,7 @@ void APlayerCharacterBase::Tick(float DeltaTime)
 				FistLocation,
 				FQuat::Identity,
 				ObjectsToCollide,
-				FCollisionShape::MakeCapsule(50.0f, 50.0f)
+				FCollisionShape::MakeCapsule(22.0f, 22.0f)
 			);
 
 			if (HasHitConnected)
@@ -166,6 +166,17 @@ void APlayerCharacterBase::Tick(float DeltaTime)
 					if (IsValid(Enemy))
 					{
 						Enemy->ReceivePunch();
+
+						if (PunchingSound)
+						{
+							UGameplayStatics::PlaySoundAtLocation(
+								World,
+								PunchingSound,
+								FistLocation,
+								FRotator::ZeroRotator
+							);
+						}
+						
 					}
 				}
 			}

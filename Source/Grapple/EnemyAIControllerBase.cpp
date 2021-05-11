@@ -34,7 +34,7 @@ bool AEnemyAIControllerBase::IsInFront(AActor* OtherActor) const
 	const auto& AIPawn = Cast<AEnemyCharacterBase>(GetPawn());
 
 	// Copy required variables
-	const auto AIForward = AIPawn->GetHeadRotationVector();
+	const auto AIForward = AIPawn->GetActorForwardVector();
 	const auto OtherPosition = OtherActor->GetActorLocation();
 	const auto AIPosition = AIPawn->GetActorLocation();
 

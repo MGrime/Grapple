@@ -7,6 +7,7 @@
 
 #include "EnemyProjectileBase.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 EBTNodeResult::Type UBTTask_ShootTargetActor::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -46,6 +47,17 @@ EBTNodeResult::Type UBTTask_ShootTargetActor::ExecuteTask(UBehaviorTreeComponent
 
 	// Fire towards target
 	GetWorld()->SpawnActor<AEnemyProjectileBase>(ProjectileToFire, PawnLocation, SpawnRotation);
+
+	if (SoundToPlayOnFire)
+	{
+		UGameplayStatics::PlaySoundAtLocation(
+			GetWorld(),
+			SoundToPlayOnFire,
+			PawnLocation,
+			SpawnRotation,
+			0.2f
+		);
+	}
 
 	return EBTNodeResult::Succeeded;
 	

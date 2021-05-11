@@ -41,8 +41,17 @@ protected:
 	
 	#pragma endregion
 
+	#pragma region FUNCTIONS
+
+	UFUNCTION()
+		void OnOverlapBegin(UPrimitiveComponent* Comp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	#pragma endregion
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 };
+
+

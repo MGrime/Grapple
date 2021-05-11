@@ -58,7 +58,7 @@ public:
 	void CrouchToggle();
 	void Punch();
 
-	// Animation
+	#pragma region ANIMATION
 	UFUNCTION(BlueprintPure, Category = "Wall Running")
 		bool IsWallRunning();
 
@@ -83,13 +83,23 @@ public:
 	// Returns true if jumps left < max jumps. If equal it is our first jump
 	UFUNCTION(BlueprintPure)
 		bool IsSecondJump();
+	#pragma endregion
 
-	// IK Getters
+	#pragma region IK
 	UFUNCTION(BlueprintCallable, Category = "IK")
 		float GetRightFootIK();
 	
 	UFUNCTION(BlueprintCallable, Category = "IK")
 		float GetLeftFootIK();
+	#pragma endregion
+
+	#pragma region WALL RUN
+
+	// Public so other events can end wall running (i.e. getting hit)
+	UFUNCTION(Category = "Wall Running")
+		void EndWallRun(EWallRunEndReason Reason);
+	
+	#pragma endregion
 
 private:
 	#pragma region CAMERA
@@ -136,6 +146,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		bool bPunching;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* PunchingSound;
 	
 	#pragma endregion
 
@@ -246,9 +259,6 @@ private:
 
 	UFUNCTION(Category = "Wall Running")
 		void UpdateWallRun();
-
-	UFUNCTION(Category = "Wall Running")
-		void EndWallRun(EWallRunEndReason Reason);
 
 	// Custom Delgates for hooking into compoentns
 

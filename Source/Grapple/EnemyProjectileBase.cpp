@@ -3,6 +3,7 @@
 
 #include "EnemyProjectileBase.h"
 
+#include "PlayerCharacterBase.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -25,15 +26,33 @@ AEnemyProjectileBase::AEnemyProjectileBase()
 	// Create projectile movement component
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
 
-	// Configure
+	// Configure movement
 	MovementComponent->InitialSpeed = MovementSpeed;
 	MovementComponent->MaxSpeed = MovementSpeed;
 	MovementComponent->ProjectileGravityScale = 0.0f;
-	InitialLifeSpan = 10.0f;
-	
+	InitialLifeSpan = 5.0f;
+
+	// configure trigger
+	LaserCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemyProjectileBase::OnOverlapBegin);
 
 	
 
+}
+void AEnemyProjectileBase::OnOverlapBegin(UPrimitiveComponent* Comp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// Try to cast to player
+	const auto Player = Cast<APlayerCharacterBase>(OtherActor);
+	if (Player)
+	{
+		if (Player->IsWallRunning())
+		{
+			// Getting hit means we have fallen off
+			Player->EndWallRun(EWallRunEndReason::FallOff);
+		}
+
+		Destroy();
+	}
 }
 
 // Called when the game starts or when spawned

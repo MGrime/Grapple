@@ -19,5 +19,8 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AEnemyProjectileBase> ProjectileToFire;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* SoundToPlayOnFire;
 	
 };
